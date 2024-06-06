@@ -11,7 +11,7 @@ defineProps<{
   className?: string
 }>()
 
-const inputText = defineModel()
+const inputText = defineModel<string>()
 const id = useId()
 </script>
 

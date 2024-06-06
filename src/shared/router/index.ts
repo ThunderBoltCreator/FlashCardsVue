@@ -10,3 +10,5 @@ export const router = createRouter({
     }
   ]
 })
+
+router.beforeEach((to, from) => {})
