@@ -3,64 +3,40 @@ import { AppTypography } from '@/shared/ui/typography'
 import { AppButton } from '@/shared/ui/button'
 import { AppTextField } from '@/shared/ui/text-field'
 import { AppCheckbox } from '@/shared/ui/checkbox'
-import zod, { ZodError } from 'zod'
-
-import { ref } from 'vue'
-import { authControllerLogin } from '@/entities/user'
+import { Form as VeeForm } from 'vee-validate'
+import zod from 'zod'
 
 const validateSchema = zod.object({
   email: zod.string().email(),
   password: zod.string().min(6, 'Password must be at least 6 characters long'),
   rememberMe: zod.boolean()
 })
-
-const form = ref({
-  email: '',
-  password: '',
-  rememberMe: false
-})
-
-async function submitLoginForm(event: Event) {
-  event.preventDefault()
-
-  try {
-    const fieldsData = validateSchema.parse(form.value)
-
-    try {
-      const res = await authControllerLogin(fieldsData)
-      console.log('loginFetchResponse', res)
-    } catch (e) {
-      console.log('loginFetchError', e)
-    }
-
-    console.log(fieldsData)
-  } catch (e) {
-    const error = e as ZodError
-    const flattenError = error.flatten()
-
-    for (const key in flattenError.fieldErrors) {
-      console.log(flattenError.fieldErrors[key]?.[0])
-    }
-  }
-}
+function submitLoginForm(values: { email: string; password: string; rememberMe: boolean }) {}
 </script>
 <template>
   <section class="card">
     <AppTypography class="title" type="h1">Sign In</AppTypography>
-    <form class="form" @submit="submitLoginForm">
-      <AppTextField v-model="form.email" type="email" class-name="email-block" label="Email" />
+    <VeeForm :validation-schema="validateSchema" class="form" @submit="submitLoginForm">
       <AppTextField
-        v-model="form.password"
+        v-model="values.email"
+        type="email"
+        class-name="email-block"
+        label="Email"
+        :error-text="errors.email"
+      />
+      <AppTextField
+        v-model="values.password"
         class-name="password-block"
         label="Password"
         type="password"
+        :error-text="errors.password"
       />
-      <AppCheckbox v-model="form.rememberMe" class-name="checkbox" label="Remember me" />
+      <AppCheckbox v-model="values.rememberMe" class-name="checkbox" label="Remember me" />
       <RouterLink to="/" class="forgot">
         <AppTypography type="body2"> Forgot Password?</AppTypography></RouterLink
       >
       <AppButton class="btn">Sign In</AppButton>
-    </form>
+    </VeeForm>
     <AppTypography class="question" type="body2">Don't have an account?</AppTypography>
     <RouterLink class="link" to="/register">Sign Up</RouterLink>
   </section>

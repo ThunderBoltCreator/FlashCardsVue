@@ -1,12 +1,9 @@
 <script setup>
-import IconBase from '@/shared/ui/icon/IconBase.vue'
-import TextField from '@/shared/ui/text-field/AppTextField.vue'
 import { ref } from 'vue'
-const text = ref('')
+import { AppHeader } from '@/shared/ui/layout'
 </script>
 <template>
-  <header><div class="container">header</div></header>
-
+  <AppHeader />
   <main>
     <div class="container">
       <RouterView />

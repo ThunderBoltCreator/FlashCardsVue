@@ -9,6 +9,7 @@ defineOptions({
 defineProps<{
   label: string
   className?: string
+  errorText?: string
 }>()
 
 const inputText = defineModel<string>()
@@ -19,6 +20,7 @@ const id = useId()
   <div class="input-wrapper" :class="className">
     <AppTypography class="label" as="label" :for="id" type="body2">{{ label }}</AppTypography>
     <input :id="id" v-model="inputText" v-bind="$attrs" class="input" />
+    <AppTypography v-if="errorText" type="error">{{ errorText }}</AppTypography>
   </div>
 </template>
 
