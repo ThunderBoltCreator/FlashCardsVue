@@ -1,4 +1,4 @@
-import { toast, ToastOptions } from 'vue3-toastify'
+import { toast, type ToastOptions } from 'vue3-toastify'
 
 export const notify = (notifyText: string, options?: ToastOptions) => {
   toast(

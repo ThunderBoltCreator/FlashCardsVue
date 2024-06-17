@@ -3,40 +3,36 @@ import { AppTypography } from '@/shared/ui/typography'
 import { AppButton } from '@/shared/ui/button'
 import { AppTextField } from '@/shared/ui/text-field'
 import { AppCheckbox } from '@/shared/ui/checkbox'
-import { Form as VeeForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import zod from 'zod'
+import { toTypedSchema } from '@vee-validate/zod'
 
 const validateSchema = zod.object({
   email: zod.string().email(),
   password: zod.string().min(6, 'Password must be at least 6 characters long'),
   rememberMe: zod.boolean()
 })
-function submitLoginForm(values: { email: string; password: string; rememberMe: boolean }) {}
+
+type FormFields = zod.infer<typeof validateSchema>
+const { handleSubmit } = useForm<FormFields>({
+  validationSchema: toTypedSchema(validateSchema)
+})
+function submitLoginForm(values: FormFields) {
+  console.log('values: ', values)
+}
 </script>
 <template>
   <section class="card">
     <AppTypography class="title" type="h1">Sign In</AppTypography>
-    <VeeForm :validation-schema="validateSchema" class="form" @submit="submitLoginForm">
-      <AppTextField
-        v-model="values.email"
-        type="email"
-        class-name="email-block"
-        label="Email"
-        :error-text="errors.email"
-      />
-      <AppTextField
-        v-model="values.password"
-        class-name="password-block"
-        label="Password"
-        type="password"
-        :error-text="errors.password"
-      />
-      <AppCheckbox v-model="values.rememberMe" class-name="checkbox" label="Remember me" />
+    <form novalidate class="form" @submit="handleSubmit(submitLoginForm)">
+      <AppTextField name="email" type="email" class-name="email-block" label="Email" />
+      <AppTextField name="password" class-name="password-block" label="Password" type="password" />
+      <AppCheckbox name="rememberMe" class-name="checkbox" label="Remember me" />
       <RouterLink to="/" class="forgot">
         <AppTypography type="body2"> Forgot Password?</AppTypography></RouterLink
       >
       <AppButton class="btn">Sign In</AppButton>
-    </VeeForm>
+    </form>
     <AppTypography class="question" type="body2">Don't have an account?</AppTypography>
     <RouterLink class="link" to="/register">Sign Up</RouterLink>
   </section>

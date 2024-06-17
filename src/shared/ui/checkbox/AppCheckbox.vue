@@ -1,24 +1,40 @@
 <script setup lang="ts">
 import { CheckboxRoot, CheckboxIndicator, Label } from 'radix-vue'
 import { AppTypography } from '@/shared/ui/typography'
+import { toRef } from 'vue'
+import { useField } from 'vee-validate'
 
-defineProps<{
+const props = defineProps<{
   label?: string
   className?: string
+  name: string
+  value?: boolean
 }>()
 
 defineOptions({
   inheritAttrs: false
 })
 
-const checkboxValue = defineModel<boolean>()
+const name = toRef(props, 'name')
+
+const { value, handleChange } = useField(name, undefined, {
+  initialValue: props.value,
+  type: 'checkbox'
+})
 </script>
 <template>
   <Label as-child class="checkbox-root" :class="className">
     <AppTypography type="body2" class="label" as="label">
-      <CheckboxRoot v-model:checked="checkboxValue" v-bind="$attrs" class="checkbox">
+      <CheckboxRoot
+        :value="name"
+        :checked="value"
+        :name="name"
+        v-bind="$attrs"
+        class="checkbox"
+        @update:checked="handleChange"
+      >
         <div class="frame" />
-        <CheckboxIndicator v-if="checkboxValue" class="indicator">
+        <CheckboxIndicator v-if="value" class="indicator">
           <svg
             fill="none"
             height="18"

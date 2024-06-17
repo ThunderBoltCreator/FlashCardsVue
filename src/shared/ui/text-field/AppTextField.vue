@@ -1,25 +1,56 @@
 <script setup lang="ts">
 import { AppTypography } from '@/shared/ui/typography'
 import { useId } from 'radix-vue'
+import { type InputTypeHTMLAttribute, toRef } from 'vue'
+import { useField } from 'vee-validate'
 
 defineOptions({
   inheritAttrs: false
 })
 
-defineProps<{
-  label: string
-  className?: string
-  errorText?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    label: string
+    className?: string
+    errorText?: string
+    name: string
+    value?: string
+    type?: InputTypeHTMLAttribute
+  }>(),
+  {
+    type: 'text',
+    className: '',
+    errorText: '',
+    value: ''
+  }
+)
 
-const inputText = defineModel<string>()
-const id = useId()
+const name = toRef(props, 'name')
+
+const {
+  value: inputValue,
+  errorMessage,
+  handleChange,
+  handleBlur,
+  meta
+} = useField(name, undefined, {
+  initialValue: props.value
+})
 </script>
 
 <template>
   <div class="input-wrapper" :class="className">
-    <AppTypography class="label" as="label" :for="id" type="body2">{{ label }}</AppTypography>
-    <input :id="id" v-model="inputText" v-bind="$attrs" class="input" />
+    <AppTypography class="label" as="label" :for="name" type="body2">{{ label }}</AppTypography>
+    <input
+      :id="name"
+      :type="type"
+      :value="inputValue"
+      :placeholder="label"
+      v-bind="$attrs"
+      class="input"
+      @input="handleChange"
+      @blur="handleBlur"
+    />
     <AppTypography v-if="errorText" type="error">{{ errorText }}</AppTypography>
   </div>
 </template>
