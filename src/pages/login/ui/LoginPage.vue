@@ -6,6 +6,7 @@ import { AppCheckbox } from '@/shared/ui/checkbox'
 import { useForm } from 'vee-validate'
 import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
+import { authControllerLogin } from '@/entities/user'
 
 const validateSchema = zod.object({
   email: zod.string().email(),
@@ -17,7 +18,8 @@ type FormFields = zod.infer<typeof validateSchema>
 const { handleSubmit } = useForm<FormFields>({
   validationSchema: toTypedSchema(validateSchema)
 })
-function submitLoginForm(values: FormFields) {
+async function submitLoginForm(values: FormFields) {
+  const res = await authControllerLogin(values)
   console.log('values: ', values)
 }
 </script>

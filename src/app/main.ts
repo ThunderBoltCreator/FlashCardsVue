@@ -2,8 +2,8 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
-import { router } from '@/shared/router'
-import '@/shared/styles/index.scss'
+import { router } from '@/shared/config/router'
+import '@/shared/ui/styles/index.scss'
 import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 

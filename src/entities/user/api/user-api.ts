@@ -1,5 +1,5 @@
-import { createInstance, type BodyType } from '@/shared/api'
-import { type SecondParameter } from '@/shared/api/generated'
+import { createInstance, type BodyType } from '@/shared/config/api'
+import { type SecondParameter } from '@/shared/config/api/generated'
 
 export type AuthControllerLoginResult = NonNullable<Awaited<ReturnType<typeof authControllerLogin>>>
 export interface LoginResponse {

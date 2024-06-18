@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { AppTypography } from '@/shared/ui/typography'
-import { useId } from 'radix-vue'
 import { type InputTypeHTMLAttribute, toRef } from 'vue'
 import { useField } from 'vee-validate'
 
