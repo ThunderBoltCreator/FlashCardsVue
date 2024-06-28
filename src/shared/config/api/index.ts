@@ -1,22 +1,31 @@
-import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
+// export const baseApi = axios.create({
+//   baseURL: 'https://api.flashcards.andrii.es/',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   },
+//   withCredentials: true
+// })
+export const makeRequest = <T>(path: string, options?: RequestInit): Response => {
+  const BASE_URL = 'https://api.flashcards.andrii.es/'
+  const BASE_OPTIONS: RequestInit = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+  const config = {
+    ...options,
+    ...BASE_OPTIONS
+  }
 
-export const baseApi = axios.create({
-  baseURL: 'https://api.flashcards.andrii.es/',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  withCredentials: true
-})
-
-export const createInstance = <T>(
-  config: AxiosRequestConfig,
-  options?: AxiosRequestConfig
-): Promise<T> => {
-  return baseApi({
-    ...config,
-    ...options
-  }).then((r) => r.data)
+  return fetch(BASE_URL + path, config)
 }
-export type BodyType<Data> = Data
 
-export type ErrorType<Error> = AxiosError<Error>
+export const makeAuthorizedRequest = (url: string, options: RequestInit) => {
+  const config: RequestInit = {
+    ...options,
+    credentials: 'include'
+  }
+  return makeRequest(url, config)
+}
+
+export type BodyType<Data> = Data

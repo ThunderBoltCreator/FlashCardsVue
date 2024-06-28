@@ -1,5 +1,5 @@
-import { createInstance, type BodyType } from '@/shared/config/api'
 import { type SecondParameter } from '@/shared/config/api/generated'
+import { makeRequest } from '@/shared/config/api'
 
 export type AuthControllerLoginResult = NonNullable<Awaited<ReturnType<typeof authControllerLogin>>>
 export interface LoginResponse {
@@ -22,9 +22,9 @@ export interface LoginRequest {
  */
 export const authControllerLogin = (
   loginRequest: BodyType<LoginRequest>,
-  options?: SecondParameter<typeof createInstance>
+  options?: SecondParameter<typeof makeRequest>
 ) => {
-  return createInstance<LoginResponse>(
+  return makeRequest(
     {
       data: loginRequest,
       headers: { 'Content-Type': 'application/json' },
