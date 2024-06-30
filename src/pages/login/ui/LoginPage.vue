@@ -6,7 +6,8 @@ import { AppCheckbox } from '@/shared/ui/checkbox'
 import { useForm } from 'vee-validate'
 import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import { authControllerLogin } from '@/entities/user'
+import { login } from '@/pages/login/model/login-page-model.ts'
+import { toast } from 'vue3-toastify'
 
 const validateSchema = zod.object({
   email: zod.string().email(),
@@ -18,15 +19,22 @@ type FormFields = zod.infer<typeof validateSchema>
 const { handleSubmit } = useForm<FormFields>({
   validationSchema: toTypedSchema(validateSchema)
 })
-async function submitLoginForm(values: FormFields) {
-  const res = await authControllerLogin(values)
-  console.log('values: ', values)
-}
+
+const onSubmit = handleSubmit(async (values: FormFields) => {
+  console.log('submit')
+  const loginResponse = await login(values)
+
+  if (loginResponse.errorMessage) {
+    toast.error(loginResponse.errorMessage)
+  } else if (loginResponse.message) {
+    toast.success(loginResponse.message)
+  }
+})
 </script>
 <template>
   <section class="card">
     <AppTypography class="title" type="h1">Sign In</AppTypography>
-    <form novalidate class="form" @submit="handleSubmit(submitLoginForm)">
+    <form novalidate class="form" @submit="onSubmit">
       <AppTextField name="email" type="email" class-name="email-block" label="Email" />
       <AppTextField name="password" class-name="password-block" label="Password" type="password" />
       <AppCheckbox name="rememberMe" class-name="checkbox" label="Remember me" />

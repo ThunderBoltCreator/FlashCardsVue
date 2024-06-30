@@ -21,16 +21,15 @@ export interface LoginRequest {
  * @summary Sign in using email and password. Must have an account to do so.
  */
 export const authControllerLogin = (
-  loginRequest: BodyType<LoginRequest>,
+  loginRequest: LoginRequest,
   options?: SecondParameter<typeof makeRequest>
 ) => {
-  return makeRequest(
-    {
-      data: loginRequest,
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-      url: `/v1/auth/login`
-    },
-    options
-  )
+  return makeRequest<{
+    accessToken: string
+    refreshToken: string
+  }>('/v1/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(loginRequest),
+    ...options
+  })
 }
