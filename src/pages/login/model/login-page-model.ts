@@ -1,4 +1,5 @@
 import { authControllerLogin, type LoginRequest, userModel } from '@/entities/user'
+import { authControllerGetUserData } from '@/entities/user/api/user-api.ts'
 
 export async function login(data: LoginRequest) {
   try {
@@ -17,5 +18,14 @@ export async function login(data: LoginRequest) {
     return {
       errorMessage: 'Неверный логин или пароль'
     }
+  }
+}
+
+export async function getMe() {
+  try {
+    const res = await authControllerGetUserData()
+    console.log(res)
+  } catch (error) {
+    console.log('login-page-model error', error)
   }
 }

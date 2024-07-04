@@ -344,16 +344,6 @@ export interface UpdateUserRequest {
   name?: string
 }
 
-export interface User {
-  avatar: Blob
-  created: string
-  email: string
-  id: string
-  isEmailVerified: boolean
-  name: string
-  updated: string
-}
-
 export interface CreateUserRequest {
   /**
    * User's email address
@@ -373,14 +363,6 @@ export interface CreateUserRequest {
 }
 
 export type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1]
-
-/**
- * Retrieve current user data.
- * @summary Current user data
- */
-export const authControllerGetUserData = (options?: SecondParameter<typeof makeRequest>) => {
-  return createInstance<User>({ method: 'GET', url: `/v1/auth/me` }, options)
-}
 
 /**
  * Update current user data.

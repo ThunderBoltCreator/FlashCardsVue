@@ -1,5 +1,4 @@
-import { type SecondParameter } from '@/shared/config/api/generated'
-import { makeRequest } from '@/shared/config/api'
+import { type ApiOptions, makeAuthorizedRequest, makeRequest } from '@/shared/config/api'
 
 export type AuthControllerLoginResult = NonNullable<Awaited<ReturnType<typeof authControllerLogin>>>
 export interface LoginResponse {
@@ -20,16 +19,31 @@ export interface LoginRequest {
  * Sign in using email and password. Must have an account to do so.
  * @summary Sign in using email and password. Must have an account to do so.
  */
-export const authControllerLogin = (
-  loginRequest: LoginRequest,
-  options?: SecondParameter<typeof makeRequest>
-) => {
+export const authControllerLogin = (loginRequest: LoginRequest, options?: ApiOptions) => {
   return makeRequest<{
     accessToken: string
     refreshToken: string
-  }>('/v1/auth/login', {
+  }>({
+    path: '/v1/auth/login',
     method: 'POST',
     body: JSON.stringify(loginRequest),
     ...options
   })
+}
+
+export interface User {
+  avatar: Blob
+  created: string
+  email: string
+  id: string
+  isEmailVerified: boolean
+  name: string
+  updated: string
+}
+/**
+ * Retrieve current user data.
+ * @summary Current user data
+ */
+export const authControllerGetUserData = (options?: ApiOptions) => {
+  return makeAuthorizedRequest<User>({ method: 'GET', path: `/v1/auth/me`, ...options })
 }

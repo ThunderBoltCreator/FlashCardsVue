@@ -6,7 +6,7 @@ import { AppCheckbox } from '@/shared/ui/checkbox'
 import { useForm } from 'vee-validate'
 import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import { login } from '@/pages/login/model/login-page-model.ts'
+import { getMe, login } from '@/pages/login/model/login-page-model.ts'
 import { toast } from 'vue3-toastify'
 
 const validateSchema = zod.object({
@@ -45,6 +45,7 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
     </form>
     <AppTypography class="question" type="body2">Don't have an account?</AppTypography>
     <RouterLink class="link" to="/register">Sign Up</RouterLink>
+    <AppButton type="button" @click="getMe">Get Me</AppButton>
   </section>
 </template>
 

@@ -5,35 +5,55 @@
 //   },
 //   withCredentials: true
 // })
-export const makeRequest = async <T>(path: string, options?: RequestInit): Promise<T> => {
+
+export type ApiOptions = RequestInit & { path: string }
+export const makeRequest = async <T>(options?: ApiOptions): Promise<T> => {
   const BASE_URL = 'https://api.flashcards.andrii.es'
   const BASE_OPTIONS: RequestInit = {
     headers: {
       'Content-Type': 'application/json'
     }
   }
-  const config = {
-    ...options,
-    ...BASE_OPTIONS
+  const config: RequestInit = {
+    ...BASE_OPTIONS,
+    ...options
   }
+  const request = new Request(BASE_URL + options?.path, config)
+  const cloneRequest = request.clone()
 
-  const res = await fetch(BASE_URL + path, config)
+  try {
+    const requestResponse = await fetch(request)
 
-  if (!res.ok) {
+    if (!requestResponse.ok && !requestResponse.url.includes('login')) {
+      if (requestResponse.status === 401) {
+        const refreshResponse = await fetch(BASE_URL + '/v1/auth/refresh-token', {
+          credentials: 'include',
+          method: 'POST'
+        })
 
-    if (res.status === 401) {
-       options.
+        if (refreshResponse.ok) {
+          const requestResponse = await fetch(cloneRequest)
+
+          return requestResponse.json()
+        } else {
+          return Promise.reject('Вы не авторизованы')
+        }
+      }
+
+      return Promise.reject('')
     }
-    console.log('error response', res, await res.json())
-  }
 
-  return res.json()
+    return requestResponse.json()
+  } catch (error) {
+    console.log('api error wrapper catch', error)
+    return Promise.reject('ahahahahahaha')
+  }
 }
 
-export const makeAuthorizedRequest = (url: string, options: RequestInit) => {
-  const config: RequestInit = {
+export const makeAuthorizedRequest = <T>(options: ApiOptions) => {
+  const config: ApiOptions = {
     ...options,
     credentials: 'include'
   }
-  return makeRequest(url, config)
+  return makeRequest<T>(config)
 }
