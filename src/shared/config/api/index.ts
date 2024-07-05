@@ -1,52 +1,54 @@
-// export const baseApi = axios.create({
-//   baseURL: 'https://api.flashcards.andrii.es/',
-//   headers: {
-//     'Content-Type': 'application/json'
-//   },
-//   withCredentials: true
-// })
-
 export type ApiOptions = RequestInit & { path: string }
-export const makeRequest = async <T>(options?: ApiOptions): Promise<T> => {
-  const BASE_URL = 'https://api.flashcards.andrii.es'
-  const BASE_OPTIONS: RequestInit = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
+
+export type AppError = {
+  type: 'UnknownError' | 'ServerError'
+  message: string
+  rootCause?: unknown
+}
+
+const RE_CONTENT_TYPE_JSON = new RegExp('^application/(x-)?json', 'i')
+const UNEXPECTED_ERROR_MESSAGE = 'An unexpected error occurred while processing your request.'
+const BASE_URL = 'https://api.flashcards.andrii.es'
+const BASE_OPTIONS: RequestInit = {
+  headers: {
+    'Content-Type': 'application/json'
   }
+}
+export const makeRequest = async <T>(options?: ApiOptions): Promise<T> => {
   const config: RequestInit = {
     ...BASE_OPTIONS,
     ...options
   }
   const request = new Request(BASE_URL + options?.path, config)
-  const cloneRequest = request.clone()
 
   try {
     const requestResponse = await fetch(request)
+    const responseData = await unwrapResponseBody(requestResponse)
 
-    if (!requestResponse.ok && !requestResponse.url.includes('login')) {
-      if (requestResponse.status === 401) {
+    if (!requestResponse.ok) {
+      if (requestResponse.status === 401 && !requestResponse.url.includes('login')) {
         const refreshResponse = await fetch(BASE_URL + '/v1/auth/refresh-token', {
           credentials: 'include',
           method: 'POST'
         })
+        const refreshData = await unwrapResponseBody(refreshResponse)
 
         if (refreshResponse.ok) {
-          const requestResponse = await fetch(cloneRequest)
+          const requestResponse = await fetch(request)
 
-          return requestResponse.json()
+          return await unwrapResponseBody(requestResponse)
         } else {
-          return Promise.reject('Вы не авторизованы')
+          return Promise.reject(normalizeError(refreshData))
         }
       }
 
-      return Promise.reject('')
+      return Promise.reject(normalizeError(responseData))
     }
 
-    return requestResponse.json()
+    return responseData
   } catch (error) {
     console.log('api error wrapper catch', error)
-    return Promise.reject('ahahahahahaha')
+    return Promise.reject(normalizeUnknownError(error))
   }
 }
 
@@ -56,4 +58,40 @@ export const makeAuthorizedRequest = <T>(options: ApiOptions) => {
     credentials: 'include'
   }
   return makeRequest<T>(config)
+}
+
+const normalizeUnknownError = (error: unknown): AppError => {
+  return {
+    type: 'UnknownError',
+    message: UNEXPECTED_ERROR_MESSAGE,
+    rootCause: error
+  }
+}
+
+const normalizeError = (errorData: unknown): AppError => {
+  const error: AppError = {
+    type: 'ServerError' as const,
+    message: UNEXPECTED_ERROR_MESSAGE
+  }
+
+  if (typeof errorData === 'object' && errorData) {
+    if ('message' in errorData && typeof errorData.message === 'string') {
+      return Object.assign(error, errorData)
+    }
+  }
+
+  error.rootCause = errorData
+  return error
+}
+
+const unwrapResponseBody = async (response: Response) => {
+  const contentType = response.headers.has('Content-Type')
+    ? response.headers.get('Content-Type')
+    : ''
+
+  if (contentType !== null && RE_CONTENT_TYPE_JSON.test(contentType)) {
+    return response.json()
+  }
+
+  return response.text()
 }
