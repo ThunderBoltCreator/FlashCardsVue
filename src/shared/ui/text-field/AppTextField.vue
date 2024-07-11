@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { AppTypography } from '@/shared/ui/typography'
-import { type InputTypeHTMLAttribute, toRef } from 'vue'
+import { computed, type InputTypeHTMLAttribute, toRef } from 'vue'
 import { useField } from 'vee-validate'
 
 defineOptions({
@@ -35,6 +35,33 @@ const {
 } = useField(name, undefined, {
   initialValue: props.value
 })
+
+const fieldEventGetter = ({ meta, errorMessage }) => {
+  if (errorMessage.value) {
+    return ['input']
+  }
+
+  return []
+}
+
+const handlers = computed(() => {
+  const on: Record<string, any> = {
+    blur: handleBlur,
+    input: [(e: unknown) => handleChange(e, false)]
+  }
+
+  const triggers = fieldEventGetter({ meta, errorMessage })
+
+  triggers.forEach((t) => {
+    if (Array.isArray(on[t])) {
+      on[t].push(handleChange)
+    } else {
+      on[t] = handleChange
+    }
+  })
+
+  return on
+})
 </script>
 
 <template>
@@ -47,8 +74,7 @@ const {
       :placeholder="label"
       v-bind="$attrs"
       class="input"
-      @input="handleChange"
-      @blur="handleBlur"
+      v-on="handlers"
     />
     <AppTypography v-if="errorText" type="error">{{ errorText }}</AppTypography>
   </div>

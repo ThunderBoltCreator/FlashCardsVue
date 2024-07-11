@@ -47,7 +47,6 @@ export const makeRequest = async <T>(options?: ApiOptions): Promise<T> => {
 
     return responseData
   } catch (error) {
-    console.log('api error wrapper catch', error)
     return Promise.reject(normalizeUnknownError(error))
   }
 }

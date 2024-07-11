@@ -7,7 +7,8 @@ import { useForm } from 'vee-validate'
 import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { getMe, login } from '@/pages/login/model/login-page-model.ts'
-import { toast } from 'vue3-toastify'
+import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
+import { watch } from 'vue'
 
 const validateSchema = zod.object({
   email: zod.string().email(),
@@ -16,19 +17,19 @@ const validateSchema = zod.object({
 })
 
 type FormFields = zod.infer<typeof validateSchema>
-const { handleSubmit } = useForm<FormFields>({
+const { handleSubmit, errors, values } = useForm<FormFields>({
   validationSchema: toTypedSchema(validateSchema)
+})
+
+watch(errors, (errors) => {
+  console.log(errors)
 })
 
 const onSubmit = handleSubmit(async (values: FormFields) => {
   console.log('submit')
   const loginResponse = await login(values)
 
-  if (loginResponse.errorMessage) {
-    toast.error(loginResponse.errorMessage)
-  } else if (loginResponse.message) {
-    toast.success(loginResponse.message)
-  }
+  showToastWithModelResponse(loginResponse)
 })
 </script>
 <template>
