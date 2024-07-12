@@ -10,6 +10,10 @@ import { getMe, login } from '@/pages/login/model/login-page-model.ts'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { watch } from 'vue'
 
+export type Blabla = {
+  blablatype: 'dasdasd'
+}
+
 const validateSchema = zod.object({
   email: zod.string().email(),
   password: zod.string().min(6, 'Password must be at least 6 characters long'),

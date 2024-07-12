@@ -1,7 +1,7 @@
 import { authControllerLogin, type LoginRequest, userModel } from '@/entities/user'
 import { authControllerGetUserData } from '@/entities/user/api/user-api.ts'
 import { setLocalStorage } from '@/shared/lib/local-storage.ts'
-import type { AppError } from '@/shared/config/api'
+import type { AppError } from '@/shared/config/api/old-api.ts'
 import type { ResponseFromModelToUI } from '@/shared/lib/notifications.ts'
 
 export async function login(data: LoginRequest): Promise<ResponseFromModelToUI> {

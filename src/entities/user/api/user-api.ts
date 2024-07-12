@@ -1,4 +1,5 @@
-import { type ApiOptions, makeAuthorizedRequest, makeRequest } from '@/shared/config/api'
+import { type ApiOptions } from '@/shared/config/api/old-api.ts'
+import { useMyFetch } from '@/shared/config/api/api.ts'
 
 export type AuthControllerLoginResult = NonNullable<Awaited<ReturnType<typeof authControllerLogin>>>
 export interface LoginResponse {
@@ -19,16 +20,23 @@ export interface LoginRequest {
  * Sign in using email and password. Must have an account to do so.
  * @summary Sign in using email and password. Must have an account to do so.
  */
+// export const authControllerLogin = (loginRequest: LoginRequest, options?: ApiOptions) => {
+//   return makeRequest<{
+//     accessToken: string
+//     refreshToken: string
+//   }>({
+//     path: '/v1/auth/login',
+//     method: 'POST',
+//     body: JSON.stringify(loginRequest),
+//     ...options
+//   })
+// }
+
 export const authControllerLogin = (loginRequest: LoginRequest, options?: ApiOptions) => {
-  return makeRequest<{
+  return useMyFetch<{
     accessToken: string
     refreshToken: string
-  }>({
-    path: '/v1/auth/login',
-    method: 'POST',
-    body: JSON.stringify(loginRequest),
-    ...options
-  })
+  }>('/v1/auth/login', { method: 'POST', body: JSON.stringify(loginRequest), ...options })
 }
 
 export interface User {
@@ -44,6 +52,10 @@ export interface User {
  * Retrieve current user data.
  * @summary Current user data
  */
+// export const authControllerGetUserData = (options?: ApiOptions) => {
+//   return makeAuthorizedRequest<User>({ method: 'GET', path: `/v1/auth/me`, ...options })
+// }
+
 export const authControllerGetUserData = (options?: ApiOptions) => {
-  return makeAuthorizedRequest<User>({ method: 'GET', path: `/v1/auth/me`, ...options })
+  return useMyFetch<User>('/v1/auth/me', { method: 'GET', credentials: 'include', ...options })
 }
