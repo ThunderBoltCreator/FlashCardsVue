@@ -6,14 +6,12 @@ import { AppCheckbox } from '@/shared/ui/checkbox'
 import { useForm } from 'vee-validate'
 import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import { getMe, login } from '@/pages/login/model/login-page-model.ts'
+import { login } from '@/pages/login/model/login-page-model.ts'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { watch } from 'vue'
+import { useRouter } from 'vue-router'
 
-export type Blabla = {
-  blablatype: 'dasdasd'
-}
-
+const router = useRouter()
 const validateSchema = zod.object({
   email: zod.string().email(),
   password: zod.string().min(6, 'Password must be at least 6 characters long'),
@@ -33,6 +31,10 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
   console.log('submit')
   const loginResponse = await login(values)
 
+  if (loginResponse.type === 'success') {
+    console.log('hello i am success')
+    return router.push('/')
+  }
   showToastWithModelResponse(loginResponse)
 })
 </script>
@@ -50,7 +52,6 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
     </form>
     <AppTypography class="question" type="body2">Don't have an account?</AppTypography>
     <RouterLink class="link" to="/register">Sign Up</RouterLink>
-    <AppButton type="button" @click="getMe">Get Me</AppButton>
   </section>
 </template>
 

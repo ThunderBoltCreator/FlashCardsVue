@@ -1,14 +1,13 @@
-import { authControllerLogin, type LoginRequest, userModel } from '@/entities/user'
+import { authControllerLogin, type LoginRequest, useUserStore } from '@/entities/user'
 import { authControllerGetUserData } from '@/entities/user/api/user-api.ts'
 import { setLocalStorage } from '@/shared/lib/local-storage.ts'
-import type { AppError } from '@/shared/config/api/old-api.ts'
+import type { AppError } from '@/shared/config/api/api.ts'
 import type { ResponseFromModelToUI } from '@/shared/lib/notifications.ts'
 
 export async function login(data: LoginRequest): Promise<ResponseFromModelToUI> {
   try {
     const res = await authControllerLogin(data)
 
-    userModel.setAuthorization(true)
     setLocalStorage('accessToken', res.accessToken)
 
     return {
@@ -26,8 +25,11 @@ export async function login(data: LoginRequest): Promise<ResponseFromModelToUI> 
 }
 
 export async function getMe() {
+  const userStore = useUserStore()
   try {
     const res = await authControllerGetUserData()
+
+    userStore.setUser(res)
     console.log(res)
   } catch (error) {
     console.log('login-page-model error', error)

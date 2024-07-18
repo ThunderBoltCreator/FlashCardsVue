@@ -1,4 +1,4 @@
 import { authControllerLogin, type LoginRequest } from './api/user-api'
-import { userModel } from './model/user-model'
+import { useUserStore, type User } from './model/user-model'
 
-export { authControllerLogin, userModel, type LoginRequest }
+export { authControllerLogin, useUserStore, type LoginRequest, type User }
