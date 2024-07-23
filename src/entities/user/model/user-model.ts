@@ -10,12 +10,6 @@ export interface User {
   name: string
   updated: string
 }
-interface UserModel {
-  authorization: boolean
-  user: null | User
-  setAuthorization: (value: boolean) => void
-  setUser: (user: null | User) => void
-}
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<null | User>(null)

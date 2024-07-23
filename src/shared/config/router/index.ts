@@ -18,7 +18,11 @@ export const router = createRouter({
         requiresAuth: true
       },
       beforeEnter: async () => {
-        await getMe()
+        const me = await getMe()
+
+        if (me.type === 'error') {
+          return { path: '/login', replace: true }
+        }
       }
     },
     {
