@@ -7,22 +7,21 @@ defineOptions({
   inheritAttrs: false
 })
 
-const props = withDefaults(
-  defineProps<{
-    label: string
-    className?: string
-    errorText?: string
-    name: string
-    value?: string
-    type?: InputTypeHTMLAttribute
-  }>(),
-  {
-    type: 'text',
-    className: '',
-    errorText: '',
-    value: ''
-  }
-)
+export type AppInputProps = {
+  label: string
+  className?: string
+  errorText?: string
+  name: string
+  value?: string
+  type?: InputTypeHTMLAttribute
+}
+
+const props = withDefaults(defineProps<AppInputProps>(), {
+  type: 'text',
+  className: '',
+  errorText: '',
+  value: ''
+})
 
 const name = toRef(props, 'name')
 
@@ -67,15 +66,18 @@ const handlers = computed(() => {
 <template>
   <div class="input-wrapper" :class="className">
     <AppTypography class="label" as="label" :for="name" type="body2">{{ label }}</AppTypography>
-    <input
-      :id="name"
-      :type="type"
-      :value="inputValue"
-      :placeholder="label"
-      v-bind="$attrs"
-      class="input"
-      v-on="handlers"
-    />
+    <div class="icon-wrapper">
+      <input
+        :id="name"
+        :type="type"
+        :value="inputValue"
+        :placeholder="label"
+        v-bind="$attrs"
+        class="input"
+        v-on="handlers"
+      />
+      <slot />
+    </div>
     <AppTypography v-if="errorText" type="error">{{ errorText }}</AppTypography>
   </div>
 </template>
@@ -85,6 +87,9 @@ const handlers = computed(() => {
   position: relative;
   display: flex;
   flex-direction: column;
+}
+.icon-wrapper {
+  position: relative;
 }
 .label {
   color: var(--color-dark-100);

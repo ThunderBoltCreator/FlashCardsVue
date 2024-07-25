@@ -10,6 +10,7 @@ import { login } from '@/pages/login/model/login-page-model.ts'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { watch } from 'vue'
 import { useRouter } from 'vue-router'
+import PasswordField from '@/widgets/password-field/PasswordField.vue'
 
 const router = useRouter()
 const validateSchema = zod.object({
@@ -43,7 +44,8 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
     <AppTypography class="title" type="h1">Sign In</AppTypography>
     <form novalidate class="form" @submit="onSubmit">
       <AppTextField name="email" type="email" class-name="email-block" label="Email" />
-      <AppTextField name="password" class-name="password-block" label="Password" type="password" />
+      <!--      <AppTextField name="password" class-name="password-block" label="Password" type="password" />-->
+      <PasswordField name="password" class-name="password-block" label="Password" />
       <AppCheckbox name="rememberMe" class-name="checkbox" label="Remember me" />
       <RouterLink to="/" class="forgot">
         <AppTypography type="body2"> Forgot Password?</AppTypography></RouterLink

@@ -31,7 +31,7 @@ const tag = props.as ? props.as : variants[props.type]
 const className = props.type
 </script>
 
-<style>
+<style scoped>
 .typography {
   font-size: var(--font-size-m);
   font-weight: 700;

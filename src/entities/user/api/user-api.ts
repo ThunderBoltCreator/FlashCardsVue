@@ -1,4 +1,4 @@
-import { type ApiOptions, makeRequest, makeAuthorizedRequest } from '@/shared/config/api/api.ts'
+import { type ApiOptions, makeAuthorizedRequest } from '@/shared/config/api/api.ts'
 import type { User } from '@/entities/user'
 
 export type AuthControllerLoginResult = NonNullable<Awaited<ReturnType<typeof authControllerLogin>>>
@@ -22,7 +22,7 @@ export interface LoginRequest {
  */
 
 export const authControllerLogin = (loginRequest: LoginRequest, options?: ApiOptions) => {
-  return makeRequest<LoginResponse>({
+  return makeAuthorizedRequest<LoginResponse>({
     path: '/v1/auth/login',
     method: 'POST',
     body: JSON.stringify(loginRequest),

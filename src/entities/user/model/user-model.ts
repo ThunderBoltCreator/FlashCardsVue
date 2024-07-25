@@ -13,12 +13,12 @@ export interface User {
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<null | User>(null)
-  const isAuthorization = computed(() => {
+  const isLoggedIn = computed(() => {
     return !!user.value
   })
 
   function setUser(newUser: null | User) {
     user.value = newUser
   }
-  return { user, isAuthorization, setUser }
+  return { user, isLoggedIn, setUser }
 })

@@ -12,7 +12,8 @@ const BASE_URL = 'https://api.flashcards.andrii.es'
 const BASE_OPTIONS: RequestInit = {
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  cache: 'default'
 }
 export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
   const config: RequestInit = {
@@ -20,7 +21,7 @@ export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
     ...options
   }
   const request = new Request(BASE_URL + options.path, config)
-
+  console.log(request)
   try {
     const requestResponse = await fetch(request)
     const responseData = await unwrapResponseBody(requestResponse)

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { LoginPage } from '@/pages/login'
 import { HomePage } from '@/pages/home'
 import { getMe } from '@/pages/login/model/login-page-model.ts'
+import { useUserStore } from '@/entities/user'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,38 +14,36 @@ export const router = createRouter({
           path: '',
           component: HomePage
         }
+        // {
+        //   path: 'page2',
+        //   component: Page2
+        // }
       ],
       meta: {
-        requiresAuth: true
-      },
-      beforeEnter: async () => {
-        const me = await getMe()
-
-        if (me.type === 'error') {
-          return { path: '/login', replace: true }
-        }
+        requiredAuth: true
       }
     },
     {
       path: '/login',
       component: LoginPage,
       meta: {
-        requiresAnonymous: true
+        requiredAnonymous: true
       }
     }
   ]
 })
 
-// router.beforeEach((to, from) => {
-//   const userStore = useUserStore()
-//
-//   if (to.meta.requiresAnonymous && userStore.isAuthorization) {
-//     return { path: '/', replace: true }
-//   }
-//
-//   if (to.meta.requiresAuth && !userStore.isAuthorization) {
-//     return { path: '/login', replace: true }
-//   }
-//
-//   return true
-// })
+router.beforeEach(async (to, from) => {
+  await getMe()
+  const userStore = useUserStore()
+
+  if (userStore.isLoggedIn && to.meta.requiredAnonymous) {
+    return { path: '/', replace: true }
+  }
+
+  if (!userStore.isLoggedIn && to.meta.requiredAuth) {
+    return { path: '/login', replace: true }
+  }
+
+  return true
+})
