@@ -11,6 +11,7 @@ import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { watch } from 'vue'
 import { useRouter } from 'vue-router'
 import PasswordField from '@/widgets/password-field/PasswordField.vue'
+import AppCard from '@/shared/ui/card/AppCard.vue'
 
 const router = useRouter()
 const validateSchema = zod.object({
@@ -40,7 +41,7 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
 })
 </script>
 <template>
-  <section class="card">
+  <AppCard as="section" class="card">
     <AppTypography class="title" type="h1">Sign In</AppTypography>
     <form novalidate class="form" @submit="onSubmit">
       <AppTextField name="email" type="email" class-name="email-block" label="Email" />
@@ -54,15 +55,13 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
     </form>
     <AppTypography class="question" type="body2">Don't have an account?</AppTypography>
     <RouterLink class="link" to="/register">Sign Up</RouterLink>
-  </section>
+  </AppCard>
 </template>
 
 <style scoped lang="scss">
 .card {
   max-width: 420px;
   margin: 36px auto 0;
-  text-align: center;
-  background-color: var(--color-dark-700);
   padding: 29px 32px;
 }
 .title {
@@ -98,8 +97,5 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
 
 .question {
   margin-bottom: 7px;
-}
-
-.link {
 }
 </style>

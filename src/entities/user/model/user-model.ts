@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 export interface User {
-  avatar: Blob
+  avatar: string
   created: string
   email: string
   id: string

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { AppTypography } from '@/shared/ui/typography'
 defineProps<{
   fullWidth?: boolean
   variant?: 'primary' | 'secondary'
@@ -8,9 +7,7 @@ defineProps<{
 </script>
 <template>
   <button class="button" :class="[fullWidth && 'fullwidth', variant ?? 'primary']">
-    <AppTypography type="subtitle2">
-      <slot />
-    </AppTypography>
+    <slot />
   </button>
 </template>
 

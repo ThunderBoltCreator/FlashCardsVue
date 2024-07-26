@@ -3,6 +3,7 @@ import { LoginPage } from '@/pages/login'
 import { HomePage } from '@/pages/home'
 import { getMe } from '@/pages/login/model/login-page-model.ts'
 import { useUserStore } from '@/entities/user'
+import { ProfilePage } from '@/pages/profile'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,11 +14,11 @@ export const router = createRouter({
         {
           path: '',
           component: HomePage
+        },
+        {
+          path: 'profile',
+          component: ProfilePage
         }
-        // {
-        //   path: 'page2',
-        //   component: Page2
-        // }
       ],
       meta: {
         requiredAuth: true
@@ -33,7 +34,7 @@ export const router = createRouter({
   ]
 })
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   await getMe()
   const userStore = useUserStore()
 

@@ -61,7 +61,7 @@ const className = props.type
 }
 .h2 {
   font-size: var(--font-size-l);
-  line-height: var(--line-height-m);
+  line-height: var(--line-height-l);
 }
 .h3 {
   line-height: var(--line-height-m);
