@@ -448,14 +448,6 @@ export const authControllerResendVerificationEmail = (
 }
 
 /**
- * Sign current user out
- * @summary Sign current user out
- */
-export const authControllerLogout = (options?: SecondParameter<typeof createInstance>) => {
-  return createInstance<void>({ method: 'POST', url: `/v1/auth/logout` }, options)
-}
-
-/**
  * Deprecated, use v2
  * @deprecated
  * @summary Deprecated, use v2

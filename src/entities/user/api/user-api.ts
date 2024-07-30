@@ -42,3 +42,11 @@ export const authControllerGetUserData = (options?: ApiOptions) => {
     ...options
   })
 }
+
+/**
+ * Sign current user out
+ * @summary Sign current user out
+ */
+export const authControllerLogout = (options?: ApiOptions) => {
+  return makeAuthorizedRequest<void>({ method: 'POST', path: `/v1/auth/logout`, ...options })
+}

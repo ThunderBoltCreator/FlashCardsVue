@@ -6,12 +6,12 @@ import { AppCheckbox } from '@/shared/ui/checkbox'
 import { useForm } from 'vee-validate'
 import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import { login } from '@/pages/login/model/login-page-model.ts'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { watch } from 'vue'
 import { useRouter } from 'vue-router'
 import PasswordField from '@/widgets/password-field/PasswordField.vue'
 import AppCard from '@/shared/ui/card/AppCard.vue'
+import { login } from '@/entities/user/model/user-model.ts'
 
 const router = useRouter()
 const validateSchema = zod.object({

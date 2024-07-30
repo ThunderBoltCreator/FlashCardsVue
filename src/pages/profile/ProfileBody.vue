@@ -8,13 +8,16 @@ import { type User } from '@/entities/user'
 const props = defineProps<{
   user: User
 }>()
+defineEmits<{
+  (e: 'logout'): void
+}>()
 </script>
 <template>
   <AppTypography type="h1" class="title">Profile</AppTypography>
   <AppAvatar size="maxi" :img-src="props.user.avatar" class="avatar" />
   <AppTypography type="h2">{{ props.user.name }}</AppTypography>
   <AppTypography class="email" type="body2">{{ props.user.email }}</AppTypography>
-  <AppButton type="button" variant="secondary" class="logout-button">
+  <AppButton type="button" variant="secondary" class="logout-button" @click="$emit('logout')">
     <IconBase name="sprite/log-out" />
     <AppTypography type="subtitle2">Logout</AppTypography>
   </AppButton>

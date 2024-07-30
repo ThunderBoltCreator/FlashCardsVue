@@ -19,7 +19,7 @@ export default defineConfig({
         }
       },
       output: 'public/sprites',
-      root: 'src/shared/ui/assets'
+      root: 'src/shared/ui/assets/icons'
     })
   ],
   resolve: {

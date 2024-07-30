@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { LoginPage } from '@/pages/login'
 import { HomePage } from '@/pages/home'
-import { getMe } from '@/pages/login/model/login-page-model.ts'
-import { useUserStore } from '@/entities/user'
+import { getMe, useUserStore } from '@/entities/user'
 import { ProfilePage } from '@/pages/profile'
 
 export const router = createRouter({

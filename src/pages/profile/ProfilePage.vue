@@ -5,6 +5,11 @@ import { ref } from 'vue'
 import ProfileBody from '@/pages/profile/ProfileBody.vue'
 import AppButton from '@/shared/ui/button/AppButton.vue'
 import IconBase from '@/shared/ui/icon/IconBase.vue'
+import EditableProfile from '@/pages/profile/EditableProfile.vue'
+import { logout } from '@/entities/user/model/user-model.ts'
+import { notify } from '@/shared/ui/notify/notification.ts'
+import AppSpinner from '@/shared/ui/spinner/AppSpinner.vue'
+import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
 
 const userStore = useUserStore()
 const editableMod = ref(false)
@@ -12,16 +17,31 @@ const editableMod = ref(false)
 function changeMod() {
   editableMod.value = !editableMod.value
 }
+async function handleLogout() {
+  const res = await logout()
+
+  notify(res.message, {
+    type: res.type
+  })
+}
 </script>
 <template>
   <AppCard class="profile-root">
     <div class="profile-body-wrapper">
-      <AppButton type="button" variant="secondary" class="edit-mod" @click="changeMod">
-        <IconBase name="sprite/profile" />
+      <AppButton
+        v-if="!editableMod"
+        type="button"
+        variant="secondary"
+        class="edit-mod"
+        @click="changeMod"
+      >
+        <IconBase name="sprite/edit" />
       </AppButton>
-      <ProfileBody v-if="userStore.user && !editableMod" :user="userStore.user" />
+      <ProfileBody v-if="!editableMod" :user="userStore.user!" @logout="handleLogout" />
+      <EditableProfile v-else @change-mod="changeMod" />
     </div>
   </AppCard>
+  <FullPageSpinner />
 </template>
 <style scoped>
 .profile-root {
