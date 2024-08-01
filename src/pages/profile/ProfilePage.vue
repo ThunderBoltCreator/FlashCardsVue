@@ -7,22 +7,23 @@ import AppButton from '@/shared/ui/button/AppButton.vue'
 import IconBase from '@/shared/ui/icon/IconBase.vue'
 import EditableProfile from '@/pages/profile/EditableProfile.vue'
 import { logout } from '@/entities/user/model/user-model.ts'
-import { notify } from '@/shared/ui/notify/notification.ts'
-import AppSpinner from '@/shared/ui/spinner/AppSpinner.vue'
 import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
+import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
+import { useFetch } from '@/shared/lib/use-fetch.ts'
+
+const isLoading = ref(false)
+const editableMod = ref(false)
 
 const userStore = useUserStore()
-const editableMod = ref(false)
 
 function changeMod() {
   editableMod.value = !editableMod.value
 }
-async function handleLogout() {
-  const res = await logout()
 
-  notify(res.message, {
-    type: res.type
-  })
+async function handleLogout() {
+  const res = await useFetch(logout, isLoading)
+
+  showToastWithModelResponse(res)
 }
 </script>
 <template>
@@ -41,7 +42,7 @@ async function handleLogout() {
       <EditableProfile v-else @change-mod="changeMod" />
     </div>
   </AppCard>
-  <FullPageSpinner />
+  <FullPageSpinner v-if="isLoading" />
 </template>
 <style scoped>
 .profile-root {

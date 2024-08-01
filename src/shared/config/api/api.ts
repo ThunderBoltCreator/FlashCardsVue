@@ -32,6 +32,7 @@ export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
           credentials: 'include',
           method: 'POST'
         })
+
         const refreshData = await unwrapResponseBody(refreshResponse)
 
         if (refreshResponse.ok) {

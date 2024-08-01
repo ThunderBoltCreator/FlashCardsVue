@@ -39,6 +39,7 @@ export async function login(data: LoginRequest): Promise<ResponseFromModel> {
 
     setLocalStorage('accessToken', res.accessToken)
 
+    await router.push('/')
     return {
       type: 'success',
       message: 'Вы авторизованы!'

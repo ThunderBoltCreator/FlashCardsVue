@@ -6,14 +6,16 @@ import { AppCheckbox } from '@/shared/ui/checkbox'
 import { useForm } from 'vee-validate'
 import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
-import { watch } from 'vue'
-import { useRouter } from 'vue-router'
 import PasswordField from '@/widgets/password-field/PasswordField.vue'
 import AppCard from '@/shared/ui/card/AppCard.vue'
 import { login } from '@/entities/user/model/user-model.ts'
+import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
+import { useFetch } from '@/shared/lib/use-fetch.ts'
+import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
+import { ref } from 'vue'
 
-const router = useRouter()
+const isLoading = ref(false)
+
 const validateSchema = zod.object({
   email: zod.string().email(),
   password: zod.string().min(6, 'Password must be at least 6 characters long'),
@@ -21,23 +23,13 @@ const validateSchema = zod.object({
 })
 
 type FormFields = zod.infer<typeof validateSchema>
-const { handleSubmit, errors, values } = useForm<FormFields>({
+const { handleSubmit } = useForm<FormFields>({
   validationSchema: toTypedSchema(validateSchema)
 })
 
-watch(errors, (errors) => {
-  console.log(errors)
-})
-
 const onSubmit = handleSubmit(async (values: FormFields) => {
-  console.log('submit')
-  const loginResponse = await login(values)
-
-  if (loginResponse.type === 'success') {
-    console.log('hello i am success')
-    return router.push('/')
-  }
-  showToastWithModelResponse(loginResponse)
+  const res = await useFetch(login.bind(null, values), isLoading)
+  showToastWithModelResponse(res)
 })
 </script>
 <template>
@@ -45,7 +37,6 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
     <AppTypography class="title" type="h1">Sign In</AppTypography>
     <form novalidate class="form" @submit="onSubmit">
       <AppTextField name="email" type="email" class-name="email-block" label="Email" />
-      <!--      <AppTextField name="password" class-name="password-block" label="Password" type="password" />-->
       <PasswordField name="password" class-name="password-block" label="Password" />
       <AppCheckbox name="rememberMe" class-name="checkbox" label="Remember me" />
       <RouterLink to="/" class="forgot">
@@ -56,6 +47,7 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
     <AppTypography class="question" type="body2">Don't have an account?</AppTypography>
     <RouterLink class="link" to="/register">Sign Up</RouterLink>
   </AppCard>
+  <FullPageSpinner v-if="isLoading" />
 </template>
 
 <style scoped lang="scss">
