@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { LoginPage } from '@/pages/login'
 import { HomePage } from '@/pages/home'
-import { getMe, useUserStore } from '@/entities/user'
+import { useUserStore } from '@/entities/user'
 import { ProfilePage } from '@/pages/profile'
 
 export const router = createRouter({
@@ -34,7 +34,7 @@ export const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
-  await getMe()
+  // await getMe()
   const userStore = useUserStore()
 
   if (userStore.isLoggedIn && to.meta.requiredAnonymous) {
