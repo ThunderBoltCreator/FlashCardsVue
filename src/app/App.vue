@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Layout } from '@/shared/ui/layout'
 import { onBeforeMount } from 'vue'
-import { getMe } from '@/entities/user'
+import { useUserStore } from '@/entities/user'
 
 onBeforeMount(async () => {
-  await getMe()
+  const userStore = useUserStore()
+  await userStore.fetchUser()
 })
 </script>
 

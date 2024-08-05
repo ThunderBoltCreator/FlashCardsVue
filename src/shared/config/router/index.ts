@@ -27,17 +27,16 @@ export const router = createRouter({
       path: '/login',
       component: LoginPage,
       meta: {
-        requiredAnonymous: true
+        requiredAuth: false
       }
     }
   ]
 })
 
 router.beforeEach(async (to) => {
-  // await getMe()
   const userStore = useUserStore()
 
-  if (userStore.isLoggedIn && to.meta.requiredAnonymous) {
+  if (userStore.isLoggedIn && !to.meta.requiredAuth) {
     return { path: '/', replace: true }
   }
 

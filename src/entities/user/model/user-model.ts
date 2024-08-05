@@ -27,10 +27,35 @@ export const useUserStore = defineStore('user', () => {
     user.value = newUser
   }
 
+  async function fetchUser(this: ReturnType<typeof useUserStore>) {
+    try {
+      const res = await authControllerGetUserData()
+
+      this.setUser(res)
+
+      if (import.meta.env.DEV) {
+        console.log('fetch user success')
+      }
+
+      return {
+        type: 'success',
+        message: 'Данные пользователя получены'
+      }
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.error(error)
+      }
+      return {
+        type: 'error',
+        message: 'Не удалось получить данные пользователя'
+      }
+    }
+  }
+
   function logout() {
     user.value = null
   }
-  return { user, isLoggedIn, setUser, logout }
+  return { user, isLoggedIn, setUser, logout, fetchUser }
 })
 
 export async function login(data: LoginRequest): Promise<ResponseFromModel> {
@@ -50,27 +75,6 @@ export async function login(data: LoginRequest): Promise<ResponseFromModel> {
     return {
       type: 'error',
       message: error.message
-    }
-  }
-}
-
-export async function getMe(): Promise<ResponseFromModel> {
-  const userStore = useUserStore()
-  try {
-    const res = await authControllerGetUserData()
-
-    userStore.setUser(res)
-    console.log(res)
-
-    return {
-      type: 'success',
-      message: 'Данные пользователя получены'
-    }
-  } catch (error) {
-    console.log('login-page-model error', error)
-    return {
-      type: 'error',
-      message: 'Не удалось получить данные пользователя'
     }
   }
 }
