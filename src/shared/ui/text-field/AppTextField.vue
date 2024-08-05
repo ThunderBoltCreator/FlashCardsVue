@@ -29,14 +29,13 @@ const {
   value: inputValue,
   errorMessage,
   handleChange,
-  handleBlur,
-  meta
+  handleBlur
 } = useField(name, undefined, {
   initialValue: props.value
 })
 
-const fieldEventGetter = ({ meta, errorMessage }) => {
-  if (errorMessage.value) {
+const fieldEventGetter = (errorMsg: typeof errorMessage) => {
+  if (errorMsg.value) {
     return ['input']
   }
 
@@ -49,7 +48,7 @@ const handlers = computed(() => {
     input: [(e: unknown) => handleChange(e, false)]
   }
 
-  const triggers = fieldEventGetter({ meta, errorMessage })
+  const triggers = fieldEventGetter(errorMessage)
 
   triggers.forEach((t) => {
     if (Array.isArray(on[t])) {
