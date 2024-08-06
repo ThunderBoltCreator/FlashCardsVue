@@ -27,23 +27,17 @@ export const useUserStore = defineStore('user', () => {
     user.value = newUser
   }
 
-  async function fetchUser(this: ReturnType<typeof useUserStore>) {
+  async function fetchUser(): Promise<ResponseFromModel> {
     try {
-      const res = await authControllerGetUserData()
-
-      this.setUser(res)
-
-      if (import.meta.env.DEV) {
-        console.log('fetch user success')
-      }
+      user.value = await authControllerGetUserData()
 
       return {
         type: 'success',
         message: 'Данные пользователя получены'
       }
-    } catch (error) {
+    } catch (e) {
       if (import.meta.env.DEV) {
-        console.error(error)
+        console.error(e)
       }
       return {
         type: 'error',
@@ -52,49 +46,47 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  function logout() {
-    user.value = null
+  async function logout(): Promise<ResponseFromModel> {
+    try {
+      await authControllerLogout()
+      user.value = null
+
+      await router.push('/login')
+
+      return {
+        type: 'success',
+        message: 'Вы вышли из аккаунта'
+      }
+    } catch (e) {
+      if (import.meta.env.DEV) {
+        console.error(e)
+      }
+      return {
+        type: 'error',
+        message: 'Не удалось выйти из аккаунта'
+      }
+    }
   }
-  return { user, isLoggedIn, setUser, logout, fetchUser }
+
+  async function login(data: LoginRequest): Promise<ResponseFromModel> {
+    try {
+      const res = await authControllerLogin(data)
+      setLocalStorage('accessToken', res.accessToken)
+
+      await fetchUser()
+      return {
+        type: 'success',
+        message: 'Вы авторизованы!'
+      }
+    } catch (e) {
+      const error = e as AppError
+
+      return {
+        type: 'error',
+        message: error.message
+      }
+    }
+  }
+
+  return { user, isLoggedIn, setUser, logout, fetchUser, login }
 })
-
-export async function login(data: LoginRequest): Promise<ResponseFromModel> {
-  try {
-    const res = await authControllerLogin(data)
-
-    setLocalStorage('accessToken', res.accessToken)
-
-    await router.push('/')
-    return {
-      type: 'success',
-      message: 'Вы авторизованы!'
-    }
-  } catch (e) {
-    const error = e as AppError
-
-    return {
-      type: 'error',
-      message: error.message
-    }
-  }
-}
-
-export async function logout(): Promise<ResponseFromModel> {
-  const userStore = useUserStore()
-  try {
-    await authControllerLogout()
-    userStore.logout()
-
-    await router.push('/login')
-
-    return {
-      type: 'success',
-      message: 'Вы вышли из аккаунта'
-    }
-  } catch (e) {
-    return {
-      type: 'error',
-      message: 'Не удалось выйти из аккаунта'
-    }
-  }
-}

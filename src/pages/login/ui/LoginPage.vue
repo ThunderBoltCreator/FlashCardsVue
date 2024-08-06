@@ -8,12 +8,15 @@ import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import PasswordField from '@/widgets/password-field/PasswordField.vue'
 import AppCard from '@/shared/ui/card/AppCard.vue'
-import { login } from '@/entities/user/model/user-model.ts'
+import { useUserStore } from '@/entities/user/model/user-model.ts'
 import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
 import { useFetch } from '@/shared/lib/use-fetch.ts'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
+const userStore = useUserStore()
 const isLoading = ref(false)
 
 const validateSchema = zod.object({
@@ -28,8 +31,14 @@ const { handleSubmit } = useForm<FormFields>({
 })
 
 const onSubmit = handleSubmit(async (values: FormFields) => {
-  const res = await useFetch(login.bind(null, values), isLoading)
+  const res = await useFetch(userStore.login.bind(null, values), isLoading)
   showToastWithModelResponse(res)
+
+  if (res.type === 'success') {
+    console.log('userStore.isLoggedIn :', userStore.isLoggedIn)
+    const pushResponse = await router.push('/')
+    console.log('pushResponse :', pushResponse)
+  }
 })
 </script>
 <template>

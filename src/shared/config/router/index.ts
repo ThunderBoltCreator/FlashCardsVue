@@ -36,6 +36,8 @@ export const router = createRouter({
 router.beforeEach(async (to) => {
   const userStore = useUserStore()
 
+  console.log('beforeEach')
+
   if (userStore.isLoggedIn && !to.meta.requiredAuth) {
     return { path: '/', replace: true }
   }
