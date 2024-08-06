@@ -35,9 +35,7 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
   showToastWithModelResponse(res)
 
   if (res.type === 'success') {
-    console.log('userStore.isLoggedIn :', userStore.isLoggedIn)
-    const pushResponse = await router.push('/')
-    console.log('pushResponse :', pushResponse)
+    await router.push('/')
   }
 })
 </script>

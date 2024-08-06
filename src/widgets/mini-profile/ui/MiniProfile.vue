@@ -13,26 +13,37 @@ import {
 } from 'radix-vue'
 import IconBase from '@/shared/ui/icon/IconBase.vue'
 import AppAvatar from '@/shared/ui/avatar/AppAvatar.vue'
+import { ref } from 'vue'
+import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
+import FullPageSpinner from '@/app/App.vue'
 
-const user = useUserStore()
+const isLoading = ref(false)
+const userStore = useUserStore()
+
+async function handleLogout() {
+  isLoading.value = true
+  const res = await userStore.logout()
+  isLoading.value = false
+  showToastWithModelResponse(res)
+}
 </script>
 <template>
   <div class="mini-profile-root">
     <AppTypography type="subtitle1">
-      <RouterLink to="/profile">{{ user.user?.name }}</RouterLink>
+      <RouterLink to="/profile">{{ userStore.user?.name }}</RouterLink>
     </AppTypography>
     <DropdownMenuRoot class="radix-root-menu">
       <DropdownMenuTrigger class="radix-dropdown-trigger">
-        <AppAvatar size="mini" :img-src="user.user?.avatar" />
+        <AppAvatar size="mini" :img-src="userStore.user?.avatar" />
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent :side-offset="10" align="end" class="radix-menu">
           <DropdownMenuArrow class="radix-arrow" />
           <DropdownMenuItem class="radix-menu-item no-scale">
-            <AppAvatar size="mini" :img-src="user.user?.avatar" />
+            <AppAvatar size="mini" :img-src="userStore.user?.avatar" />
             <div>
-              <AppTypography type="subtitle2">{{ user.user?.name }}</AppTypography>
-              <AppTypography type="caption">{{ user.user?.email }}</AppTypography>
+              <AppTypography type="subtitle2">{{ userStore.user?.name }}</AppTypography>
+              <AppTypography type="caption">{{ userStore.user?.email }}</AppTypography>
             </div>
           </DropdownMenuItem>
           <DropdownMenuSeparator class="radix-separator" />
@@ -44,7 +55,7 @@ const user = useUserStore()
           </DropdownMenuItem>
           <DropdownMenuSeparator class="radix-separator" />
           <DropdownMenuItem as-child>
-            <button class="radix-menu-item logout-button">
+            <button class="radix-menu-item logout-button" @click.prevent="handleLogout">
               <IconBase name="sprite/log-out" />
               <AppTypography type="caption">Sign Out</AppTypography>
             </button>
@@ -53,6 +64,7 @@ const user = useUserStore()
       </DropdownMenuPortal>
     </DropdownMenuRoot>
   </div>
+  <FullPageSpinner v-if="isLoading" />
 </template>
 <style>
 .mini-profile-root {

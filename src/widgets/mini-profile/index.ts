@@ -1,1 +1,1 @@
-export { default as MiniProfile } from './MiniProfile.vue'
+export { default as MiniProfile } from './ui/MiniProfile.vue'
