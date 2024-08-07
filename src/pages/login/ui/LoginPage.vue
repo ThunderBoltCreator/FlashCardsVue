@@ -10,10 +10,10 @@ import PasswordField from '@/widgets/password-field/PasswordField.vue'
 import AppCard from '@/shared/ui/card/AppCard.vue'
 import { useUserStore } from '@/entities/user/model/user-model.ts'
 import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
-import { useFetch } from '@/shared/lib/use-fetch.ts'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -31,12 +31,11 @@ const { handleSubmit } = useForm<FormFields>({
 })
 
 const onSubmit = handleSubmit(async (values: FormFields) => {
-  const res = await useFetch(userStore.login.bind(null, values), isLoading)
-  showToastWithModelResponse(res)
-
+  const res = await useMyFetch(userStore.login.bind(null, values), isLoading)
   if (res.type === 'success') {
     await router.push('/')
   }
+  showToastWithModelResponse(res)
 })
 </script>
 <template>

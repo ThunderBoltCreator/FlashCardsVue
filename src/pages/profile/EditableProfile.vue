@@ -7,6 +7,10 @@ import { computed, ref } from 'vue'
 import { z, ZodError } from 'zod'
 import { ACCEPTED_IMAGES_FORMATS, IMAGE_MAX_SIZE } from '@/shared/config/const'
 import { notify } from '@/shared/ui/notify/notification.ts'
+import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
+import { useUserStore } from '@/entities/user'
+import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
+import AppTextField from '@/shared/ui/text-field/AppTextField.vue'
 
 defineEmits<{
   (e: 'changeMod'): void
@@ -24,7 +28,11 @@ const imageSchema = z
   )
 
 const uploadedPhoto = ref<File | null>(null)
+const name = ref('')
+
 const input = ref<HTMLInputElement | null>(null)
+const userStore = useUserStore()
+const isLoading = ref(false)
 
 function uploadPhoto(event: Event) {
   const el = event.target as HTMLInputElement
@@ -47,6 +55,21 @@ const photoPreview = computed(() => {
 
   return '/photo-plug.jpg'
 })
+
+async function sendChangedProfileData() {
+  const formData = new FormData()
+
+  if (uploadedPhoto.value) {
+    console.log(uploadedPhoto.value)
+    formData.append('avatar', uploadedPhoto.value)
+  }
+  if (name.value) {
+    console.log(name.value)
+    formData.append('name', name.value)
+  }
+  const res = await useMyFetch(userStore.changeProfile.bind(null, formData), isLoading)
+  showToastWithModelResponse(res)
+}
 </script>
 <template>
   <AppTypography type="h1">Edit Profile</AppTypography>
@@ -60,12 +83,15 @@ const photoPreview = computed(() => {
   </div>
 
   <!--  Смена ника  -->
+  <div>
+    <AppTextField v-model="name" :is-form-input="false" name="nickname" label="Name" />
+  </div>
   <!--  Сохранить изменения  -->
   <div class="actions">
     <AppButton type="button" variant="secondary" class="back-button" @click="$emit('changeMod')"
       ><IconBase name="sprite/arrow-back"
     /></AppButton>
-    <AppButton type="button">Save</AppButton>
+    <AppButton type="button" @click="sendChangedProfileData">Save</AppButton>
   </div>
 </template>
 <style scoped>

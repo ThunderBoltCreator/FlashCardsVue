@@ -8,7 +8,7 @@ import IconBase from '@/shared/ui/icon/IconBase.vue'
 import EditableProfile from '@/pages/profile/EditableProfile.vue'
 import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
-import { useFetch } from '@/shared/lib/use-fetch.ts'
+import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
 
 const isLoading = ref(false)
 const editableMod = ref(false)
@@ -20,7 +20,7 @@ function changeMod() {
 }
 
 async function handleLogout() {
-  const res = await useFetch(userStore.logout, isLoading)
+  const res = await useMyFetch(userStore.logout, isLoading)
 
   showToastWithModelResponse(res)
 }

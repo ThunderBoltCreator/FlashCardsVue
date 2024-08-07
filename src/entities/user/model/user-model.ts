@@ -4,7 +4,11 @@ import { authControllerLogin, type LoginRequest } from '@/entities/user'
 import { type ResponseFromModel } from '@/shared/lib/notifications.ts'
 import { setLocalStorage } from '@/shared/lib/local-storage.ts'
 import { type AppError } from '@/shared/config/api/api.ts'
-import { authControllerGetUserData, authControllerLogout } from '../api/user-api.ts'
+import {
+  authControllerGetUserData,
+  authControllerLogout,
+  authControllerUpdateUserData
+} from '../api/user-api.ts'
 import { router } from '@/shared/config/router'
 
 export interface User {
@@ -88,5 +92,23 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  return { user, isLoggedIn, setUser, logout, fetchUser, login }
+  async function changeProfile(newUserData: FormData): Promise<ResponseFromModel> {
+    try {
+      user.value = await authControllerUpdateUserData(newUserData)
+      return {
+        type: 'success',
+        message: 'Данные пользователя обновлены'
+      }
+    } catch (e) {
+      if (import.meta.env.DEV) {
+        console.error(e)
+      }
+      return {
+        type: 'error',
+        message: 'Не удалось обновить данные пользователя'
+      }
+    }
+  }
+
+  return { user, isLoggedIn, setUser, logout, fetchUser, login, changeProfile }
 })

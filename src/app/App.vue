@@ -3,7 +3,7 @@ import { Layout } from '@/shared/ui/layout'
 import { onBeforeMount, ref } from 'vue'
 import { useUserStore } from '@/entities/user'
 import { useRoute, useRouter } from 'vue-router'
-import { useFetch } from '@/shared/lib/use-fetch.ts'
+import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
 import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
 
 const route = useRoute()
@@ -12,7 +12,7 @@ const isLoading = ref(false)
 
 onBeforeMount(async () => {
   const userStore = useUserStore()
-  await useFetch(userStore.fetchUser, isLoading)
+  await useMyFetch(userStore.fetchUser, isLoading)
 
   if (route.fullPath === '/login' && userStore.isLoggedIn) {
     await router.push({ path: '/', replace: true })

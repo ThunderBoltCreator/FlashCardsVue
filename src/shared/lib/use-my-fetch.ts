@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 
-export const useFetch = async <T>(
+export const useMyFetch = async <T>(
   request: () => Promise<T>,
   isLoading: Ref<boolean>
 ): Promise<T> => {

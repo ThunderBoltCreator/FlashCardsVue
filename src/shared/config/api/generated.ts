@@ -337,10 +337,7 @@
 //   subject?: string
 // }
 //
-// export interface UpdateUserRequest {
-//   avatar?: Blob
-//   name?: string
-// }
+
 //
 // export interface CreateUserRequest {
 //   /**
@@ -362,33 +359,7 @@
 //
 // export type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1]
 //
-// /**
-//  * Update current user data.
-//  * @summary Update user data
-//  */
-// export const authControllerUpdateUserData = (
-//   updateUserRequest: BodyType<UpdateUserRequest>,
-//   options?: SecondParameter<typeof createInstance>
-// ) => {
-//   const formData = new FormData()
-//
-//   if (updateUserRequest.avatar !== undefined) {
-//     formData.append('avatar', updateUserRequest.avatar)
-//   }
-//   if (updateUserRequest.name !== undefined) {
-//     formData.append('name', updateUserRequest.name)
-//   }
-//
-//   return createInstance<User>(
-//     {
-//       data: formData,
-//       headers: { 'Content-Type': 'multipart/form-data' },
-//       method: 'PATCH',
-//       url: `/v1/auth/me`
-//     },
-//     options
-//   )
-// }
+
 //
 // /**
 //  * Create a new user account

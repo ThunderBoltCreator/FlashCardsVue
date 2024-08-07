@@ -38,6 +38,7 @@ export const authControllerLogin = (loginRequest: LoginRequest, options?: ApiOpt
 export const authControllerGetUserData = (options?: ApiOptions) => {
   return makeAuthorizedRequest<User>({
     path: '/v1/auth/me',
+    headers: { 'Content-Type': 'application/json' },
     method: 'GET',
     ...options
   })
@@ -49,4 +50,25 @@ export const authControllerGetUserData = (options?: ApiOptions) => {
  */
 export const authControllerLogout = (options?: ApiOptions) => {
   return makeAuthorizedRequest<void>({ method: 'POST', path: `/v1/auth/logout`, ...options })
+}
+
+export interface UpdateUserRequest {
+  avatar?: Blob
+  name?: string
+}
+
+/**
+ * Update current user data.
+ * @summary Update user data
+ */
+export const authControllerUpdateUserData = (updateUserRequest: FormData, options?: ApiOptions) => {
+  console.log('has avatar', updateUserRequest.has('avatar'))
+  console.log('has name', updateUserRequest.has('name'))
+
+  return makeAuthorizedRequest<User>({
+    body: updateUserRequest,
+    method: 'PATCH',
+    path: '/v1/auth/me',
+    ...options
+  })
 }

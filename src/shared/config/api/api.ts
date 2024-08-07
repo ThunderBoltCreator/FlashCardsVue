@@ -9,18 +9,17 @@ export type AppError = {
 const RE_CONTENT_TYPE_JSON = new RegExp('^application/(x-)?json', 'i')
 const UNEXPECTED_ERROR_MESSAGE = 'An unexpected error occurred while processing your request.'
 const BASE_URL = 'https://api.flashcards.andrii.es'
-const BASE_OPTIONS: RequestInit = {
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  cache: 'default'
-}
 export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
   const config: RequestInit = {
-    ...BASE_OPTIONS,
-    ...options
+    cache: 'default'
   }
-  const request = new Request(BASE_URL + options.path, config)
+
+  if (config.body instanceof FormData) {
+    config.headers = undefined
+  }
+
+  const request = new Request(BASE_URL + options.path, { ...config, ...options })
+  const cloneRequest = request.clone()
   console.log(request)
   try {
     const requestResponse = await fetch(request)
@@ -35,9 +34,12 @@ export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
 
         const refreshData = await unwrapResponseBody(refreshResponse)
 
+        console.log('refresh data', refreshData)
         if (refreshResponse.ok) {
-          const requestResponse = await fetch(request)
+          console.log('refresh response ok')
+          const requestResponse = await fetch(cloneRequest)
 
+          console.log('request response', requestResponse)
           return await unwrapResponseBody(requestResponse)
         } else {
           return Promise.reject(normalizeError(refreshData))

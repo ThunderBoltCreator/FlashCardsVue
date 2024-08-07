@@ -14,14 +14,17 @@ export type AppInputProps = {
   name: string
   value?: string
   type?: InputTypeHTMLAttribute
+  isFormInput?: boolean
 }
 
 const props = withDefaults(defineProps<AppInputProps>(), {
   type: 'text',
   className: '',
   errorText: '',
-  value: ''
+  value: '',
+  isFormInput: true
 })
+const model = defineModel<string>()
 
 const name = toRef(props, 'name')
 
@@ -67,6 +70,7 @@ const handlers = computed(() => {
     <AppTypography class="label" as="label" :for="name" type="body2">{{ label }}</AppTypography>
     <div class="icon-wrapper">
       <input
+        v-if="props.isFormInput"
         :id="name"
         :type="type"
         :value="inputValue"
@@ -74,6 +78,14 @@ const handlers = computed(() => {
         v-bind="$attrs"
         class="input"
         v-on="handlers"
+      />
+      <input
+        v-else
+        v-model="model"
+        :type="type"
+        :placeholder="label"
+        v-bind="$attrs"
+        class="input"
       />
       <slot />
     </div>
