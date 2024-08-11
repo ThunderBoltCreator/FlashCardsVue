@@ -11,7 +11,10 @@ const UNEXPECTED_ERROR_MESSAGE = 'An unexpected error occurred while processing 
 const BASE_URL = 'https://api.flashcards.andrii.es'
 export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
   const config: RequestInit = {
-    cache: 'default'
+    cache: 'default',
+    headers: {
+      'Content-Type': 'application/json'
+    }
   }
 
   if (config.body instanceof FormData) {

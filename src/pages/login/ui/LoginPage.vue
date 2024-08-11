@@ -42,9 +42,25 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
   <AppCard as="section" class="card">
     <AppTypography class="title" type="h1">Sign In</AppTypography>
     <form novalidate class="form" @submit="onSubmit">
-      <AppTextField name="email" type="email" class-name="email-block" label="Email" />
-      <PasswordField name="password" class-name="password-block" label="Password" />
-      <AppCheckbox name="rememberMe" class-name="checkbox" label="Remember me" />
+      <AppTextField
+        :is-form-input="true"
+        name="email"
+        type="email"
+        class-name="email-block"
+        label="Email"
+      />
+      <PasswordField
+        :is-form-input="true"
+        name="password"
+        class-name="password-block"
+        label="Password"
+      />
+      <AppCheckbox
+        :is-form-input="true"
+        name="rememberMe"
+        class-name="checkbox"
+        label="Remember me"
+      />
       <RouterLink to="/" class="forgot">
         <AppTypography type="body2"> Forgot Password?</AppTypography></RouterLink
       >
