@@ -11,8 +11,9 @@ import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { useUserStore } from '@/entities/user'
 import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
 import AppTextField from '@/shared/ui/text-field/AppTextField.vue'
+import { FullPageSpinner } from '@/shared/ui/spinner'
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'changeMod'): void
 }>()
 
@@ -69,6 +70,10 @@ async function sendChangedProfileData() {
   }
   const res = await useMyFetch(userStore.changeProfile.bind(null, formData), isLoading)
   showToastWithModelResponse(res)
+
+  if (res.type === 'success') {
+    emit('changeMod')
+  }
 }
 </script>
 <template>
@@ -93,6 +98,7 @@ async function sendChangedProfileData() {
     /></AppButton>
     <AppButton type="button" @click="sendChangedProfileData">Save</AppButton>
   </div>
+  <FullPageSpinner v-if="isLoading" />
 </template>
 <style scoped>
 .edit-button {

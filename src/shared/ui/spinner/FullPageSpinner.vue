@@ -2,9 +2,11 @@
 import AppSpinner from './AppSpinner.vue'
 </script>
 <template>
-  <div class="spinner-wrapper">
-    <AppSpinner />
-  </div>
+  <Teleport to="body">
+    <div class="spinner-wrapper">
+      <AppSpinner />
+    </div>
+  </Teleport>
 </template>
 <style scoped>
 .spinner-wrapper {

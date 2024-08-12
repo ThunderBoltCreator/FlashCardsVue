@@ -17,7 +17,7 @@ export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
     }
   }
 
-  if (config.body instanceof FormData) {
+  if (options.body instanceof FormData) {
     config.headers = undefined
   }
 

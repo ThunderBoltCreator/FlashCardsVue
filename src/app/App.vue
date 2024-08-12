@@ -4,7 +4,7 @@ import { onBeforeMount, ref } from 'vue'
 import { useUserStore } from '@/entities/user'
 import { useRoute, useRouter } from 'vue-router'
 import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
-import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
+import { FullPageSpinner } from '@/shared/ui/spinner'
 
 const route = useRoute()
 const router = useRouter()

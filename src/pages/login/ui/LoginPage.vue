@@ -14,6 +14,7 @@ import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
+import SystemLanguage from '@/widgets/system-language/ui/SystemLanguage.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -26,7 +27,7 @@ const validateSchema = zod.object({
 })
 
 type FormFields = zod.infer<typeof validateSchema>
-const { handleSubmit } = useForm<FormFields>({
+const { handleSubmit, errors, values } = useForm<FormFields>({
   validationSchema: toTypedSchema(validateSchema)
 })
 
@@ -41,6 +42,7 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
 <template>
   <AppCard as="section" class="card">
     <AppTypography class="title" type="h1">Sign In</AppTypography>
+
     <form novalidate class="form" @submit="onSubmit">
       <AppTextField
         :is-form-input="true"
@@ -49,12 +51,15 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
         class-name="email-block"
         label="Email"
       />
-      <PasswordField
-        :is-form-input="true"
-        name="password"
-        class-name="password-block"
-        label="Password"
-      />
+      <div class="password-block">
+        <PasswordField
+          :is-form-input="true"
+          name="password"
+          class-name="password"
+          label="Password"
+        />
+        <SystemLanguage :text="values.password" class="language" />
+      </div>
       <AppCheckbox
         :is-form-input="true"
         name="rememberMe"
@@ -84,24 +89,27 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
 .form {
   display: flex;
   flex-direction: column;
-
-  & > .checkbox {
-    align-self: flex-start;
-  }
-
-  & > .email-block {
-    margin-bottom: 24px;
-  }
-
-  & > .password-block {
-    margin-bottom: 12px;
-  }
-
-  & > .btn {
-    margin-bottom: 20px;
-  }
 }
 
+.email-block {
+  margin-bottom: 24px;
+}
+.password-block {
+  margin-bottom: 12px;
+  display: flex;
+}
+.password {
+  flex: 1 0 85%;
+}
+.language {
+  padding-top: 24px;
+}
+.checkbox {
+  align-self: flex-start;
+}
+.btn {
+  margin-bottom: 20px;
+}
 .forgot {
   text-decoration: none;
   align-self: flex-end;
