@@ -1,4 +1,7 @@
-export type ApiOptions = RequestInit & { path: string }
+export type ApiOptions = {
+  path: string
+  params?: Record<string, string> | URLSearchParams
+} & RequestInit
 
 export type AppError = {
   type: 'UnknownError' | 'ServerError'
@@ -16,6 +19,10 @@ export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
       'Content-Type': 'application/json'
     }
   }
+
+  // if (options.params !== null && !(options.params instanceof URLSearchParams) ) {
+  //
+  // }
 
   if (options.body instanceof FormData) {
     config.headers = undefined

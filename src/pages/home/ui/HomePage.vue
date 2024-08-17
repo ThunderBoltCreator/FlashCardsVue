@@ -8,6 +8,11 @@ import {
   TableRow,
   TableCell
 } from '@/shared/ui/table'
+import { useUrlSearchParams } from '@vueuse/core'
+
+const searchParams = useUrlSearchParams()
+searchParams.first = 'hello'
+console.log(searchParams)
 </script>
 <template>
   <AppTypography type="h1">Decks list</AppTypography>
