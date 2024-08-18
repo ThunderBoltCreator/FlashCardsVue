@@ -8,6 +8,17 @@ import {
   TableRow,
   TableCell
 } from '@/shared/ui/table'
+import { onMounted } from 'vue'
+import { useDecksStore } from '@/entities/decks/model/decks-model.ts'
+import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
+import { AppPagination } from '@/widgets/pagination'
+
+const decksStore = useDecksStore()
+
+onMounted(async () => {
+  const res = await decksStore.fetchDecks()
+  showToastWithModelResponse(res)
+})
 </script>
 <template>
   <AppTypography type="h1">Decks list</AppTypography>
@@ -22,14 +33,14 @@ import {
       </TableRow>
     </TableHead>
     <TableBody>
-      <TableRow>
-        <TableCell>cell 1</TableCell>
-        <TableCell>cell 2</TableCell>
-        <TableCell>cell 3</TableCell>
-        <TableCell>cell 4</TableCell>
-        <TableCell>cell 5</TableCell>
+      <TableRow v-for="deck in decksStore.decks" :key="deck.id">
+        <TableCell>{{ deck.name }}</TableCell>
+        <TableCell>{{ deck.cardsCount }}</TableCell>
+        <TableCell>{{ new Date(deck.updated).toLocaleDateString() }}</TableCell>
+        <TableCell>{{ new Date(deck.created).toLocaleDateString() }}</TableCell>
+        <TableCell>actions</TableCell>
       </TableRow>
     </TableBody>
   </TableRoot>
-  <div>pagination</div>
+  <AppPagination />
 </template>
