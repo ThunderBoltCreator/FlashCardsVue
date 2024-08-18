@@ -165,17 +165,7 @@ export interface CardWithGrade {
   userId: string
 }
 
-export interface Deck {
-  cardsCount: number
-  /** @nullable */
-  cover: null | string
-  created: string
-  id: string
-  isPrivate: boolean
-  name: string
-  updated: string
-  userId: string
-}
+export type DeckWithoutAuthor = Omit<Deck, 'author'>
 
 export interface UpdateDeckRequest {
   /** Cover image (has to be sent inside FormData, does NOT accept base64) */
@@ -201,13 +191,6 @@ export interface MinMaxCards {
   min: number
 }
 
-export interface Pagination {
-  currentPage: number
-  itemsPerPage: number
-  totalItems: number
-  totalPages: number
-}
-
 export interface PaginatedCardsWithGrade {
   items: CardWithGrade[]
   pagination: Pagination
@@ -222,19 +205,6 @@ export interface PaginatedDecksWithMaxCardsCount {
 export interface DeckAuthor {
   id: string
   name: string
-}
-
-export interface DeckWithAuthor {
-  author: DeckAuthor
-  cardsCount: number
-  /** @nullable */
-  cover: null | string
-  created: string
-  id: string
-  isPrivate: boolean
-  name: string
-  updated: string
-  userId: string
 }
 
 export interface ResetPasswordRequest {

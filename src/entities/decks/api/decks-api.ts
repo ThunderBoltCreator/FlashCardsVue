@@ -1,9 +1,9 @@
 import { makeAuthorizedRequest } from '@/shared/config/api/api.ts'
-import type { DeckWithAuthor, Pagination } from '@/shared/config/api/generated.ts'
+import type { DeckAuthor } from '@/shared/config/api/generated.ts'
 
-export type DecksControllerFindAllV2OrderBy = keyof typeof DecksControllerFindAllV2OrderBy
+export type DecksOrderBy = keyof typeof DecksOrderBy
 
-export const DecksControllerFindAllV2OrderBy = {
+export const DecksOrderBy = {
   'authorname-asc': 'author.name-asc',
   'authorname-desc': 'author.name-desc',
   'cardsCount-asc': 'cardsCount-asc',
@@ -17,15 +17,15 @@ export const DecksControllerFindAllV2OrderBy = {
   'updated-desc': 'updated-desc'
 } as const
 
-export type DecksControllerFindAllV2Params = {
+export type FindAllDecksOptions = {
   /**
    * Filter by deck authorId
    */
   authorId?: string
-  currentPage?: number
-  itemsPerPage?: number
-  maxCardsCount?: number
-  minCardsCount?: number
+  currentPage?: string
+  itemsPerPage?: string
+  maxCardsCount?: string
+  minCardsCount?: string
   /**
    * Search by deck name
    */
@@ -35,10 +35,29 @@ export type DecksControllerFindAllV2Params = {
     The format is: "field_name-order_direction".
     Available directions: "asc" and "desc".
     */
-  orderBy?: DecksControllerFindAllV2OrderBy
+  orderBy?: DecksOrderBy
+}
+
+export interface Deck {
+  author: DeckAuthor
+  cardsCount: number
+  /** @nullable */
+  cover: null | string
+  created: string
+  id: string
+  isPrivate: boolean
+  name: string
+  updated: string
+  userId: string
+}
+export interface Pagination {
+  currentPage: number
+  itemsPerPage: number
+  totalItems: number
+  totalPages: number
 }
 export interface PaginatedDecks {
-  items: DeckWithAuthor[]
+  items: Deck[]
   pagination: Pagination
 }
 
@@ -46,6 +65,12 @@ export interface PaginatedDecks {
  * Retrieve paginated decks list.
  * @summary Paginated decks list
  */
-export const getPaginateDecks = (options: DecksControllerFindAllV2Params) => {
+export const getPaginateDecks = (params?: URLSearchParams) => {
+  let query = ''
+  if (params) {
+    query = params.toString()
+  }
+  console.log('query', query)
+
   return makeAuthorizedRequest<PaginatedDecks>({ method: 'GET', path: `/v2/decks` })
 }
