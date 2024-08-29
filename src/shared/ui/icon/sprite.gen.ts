@@ -1,5 +1,14 @@
 export interface SpritesMap {
-  sprite: 'arrow-back' | 'arrow-forward' | 'close-eye' | 'edit' | 'eye' | 'log-out' | 'profile'
+  sprite:
+    | 'arrow-back'
+    | 'arrow-forward'
+    | 'close-eye'
+    | 'edit'
+    | 'eye'
+    | 'log-out'
+    | 'paginate-arrow-left'
+    | 'paginate-arrow-right'
+    | 'profile'
 }
 export const SPRITES_META: {
   [Key in keyof SpritesMap]: {
@@ -15,7 +24,7 @@ export const SPRITES_META: {
   }
 } = {
   sprite: {
-    filePath: 'sprite.871b6dde.svg',
+    filePath: 'sprite.e736185c.svg',
     items: {
       'arrow-back': {
         viewBox: '0 0 24 24',
@@ -43,6 +52,16 @@ export const SPRITES_META: {
         height: 24
       },
       'log-out': {
+        viewBox: '0 0 24 24',
+        width: 24,
+        height: 24
+      },
+      'paginate-arrow-left': {
+        viewBox: '0 0 24 24',
+        width: 24,
+        height: 24
+      },
+      'paginate-arrow-right': {
         viewBox: '0 0 24 24',
         width: 24,
         height: 24

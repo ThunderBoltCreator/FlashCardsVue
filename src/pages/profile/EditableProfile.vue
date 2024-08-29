@@ -9,7 +9,6 @@ import { ACCEPTED_IMAGES_FORMATS, IMAGE_MAX_SIZE } from '@/shared/config/const'
 import { notify } from '@/shared/ui/notify/notification.ts'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { useUserStore } from '@/entities/user'
-import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
 import AppTextField from '@/shared/ui/text-field/AppTextField.vue'
 import { FullPageSpinner } from '@/shared/ui/spinner'
 
@@ -68,12 +67,14 @@ async function sendChangedProfileData() {
     console.log(name.value)
     formData.append('name', name.value)
   }
-  const res = await useMyFetch(userStore.changeProfile.bind(null, formData), isLoading)
+  isLoading.value = true
+  const res = await userStore.changeProfile(formData)
   showToastWithModelResponse(res)
 
   if (res.type === 'success') {
     emit('changeMod')
   }
+  isLoading.value = false
 }
 </script>
 <template>

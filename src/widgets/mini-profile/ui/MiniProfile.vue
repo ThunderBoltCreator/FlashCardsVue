@@ -23,8 +23,8 @@ const userStore = useUserStore()
 async function handleLogout() {
   isLoading.value = true
   const res = await userStore.logout()
-  isLoading.value = false
   showToastWithModelResponse(res)
+  isLoading.value = false
 }
 </script>
 <template>

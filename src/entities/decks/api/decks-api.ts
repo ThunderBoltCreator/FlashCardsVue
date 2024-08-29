@@ -65,12 +65,15 @@ export interface PaginatedDecks {
  * Retrieve paginated decks list.
  * @summary Paginated decks list
  */
-export const getPaginateDecks = (params?: URLSearchParams) => {
+export const getPaginateDecks = (params?: URLSearchParams, options?: RequestInit) => {
   let query = ''
   if (params) {
     query = params.toString()
   }
-  console.log('query', query)
 
-  return makeAuthorizedRequest<PaginatedDecks>({ method: 'GET', path: `/v2/decks` })
+  return makeAuthorizedRequest<PaginatedDecks>({
+    method: 'GET',
+    path: `/v2/decks?${query}`,
+    ...options
+  })
 }

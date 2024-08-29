@@ -1,11 +1,18 @@
 <script setup>
 import { MiniProfile } from '@/widgets/mini-profile'
+import { useUserStore } from '@/entities/user'
+import AppButton from '@/shared/ui/button/AppButton.vue'
+
+const userStore = useUserStore()
 </script>
 <template>
   <header>
     <div class="container header">
       <RouterLink to="/">Logo</RouterLink>
-      <MiniProfile />
+      <MiniProfile v-if="userStore.isLoggedIn" />
+      <AppButton v-else type="button" variant="secondary">
+        <RouterLink to="/login"> Sign In </RouterLink>
+      </AppButton>
     </div>
   </header>
 </template>

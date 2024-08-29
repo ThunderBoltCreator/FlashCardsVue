@@ -9,7 +9,6 @@ import {
   authControllerLogout,
   authControllerUpdateUserData
 } from '../api/user-api.ts'
-import { router } from '@/shared/config/router'
 
 export interface User {
   avatar: string
@@ -54,8 +53,6 @@ export const useUserStore = defineStore('user', () => {
     try {
       await authControllerLogout()
       user.value = null
-
-      await router.push('/login')
 
       return {
         type: 'success',

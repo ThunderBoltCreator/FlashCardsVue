@@ -13,7 +13,6 @@ import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useMyFetch } from '@/shared/lib/use-my-fetch.ts'
 import SystemLanguage from '@/widgets/system-language/ui/SystemLanguage.vue'
 
 const router = useRouter()
@@ -32,11 +31,13 @@ const { handleSubmit, errors, values } = useForm<FormFields>({
 })
 
 const onSubmit = handleSubmit(async (values: FormFields) => {
-  const res = await useMyFetch(userStore.login.bind(null, values), isLoading)
+  isLoading.value = true
+  const res = await userStore.login(values)
   if (res.type === 'success') {
     await router.push('/')
   }
   showToastWithModelResponse(res)
+  isLoading.value = false
 })
 </script>
 <template>

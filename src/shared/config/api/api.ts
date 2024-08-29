@@ -30,7 +30,6 @@ export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
 
   const request = new Request(BASE_URL + options.path, { ...config, ...options })
   const cloneRequest = request.clone()
-  console.log(request)
   try {
     const requestResponse = await fetch(request)
     const responseData = await unwrapResponseBody(requestResponse)
@@ -44,12 +43,9 @@ export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
 
         const refreshData = await unwrapResponseBody(refreshResponse)
 
-        console.log('refresh data', refreshData)
         if (refreshResponse.ok) {
-          console.log('refresh response ok')
           const requestResponse = await fetch(cloneRequest)
 
-          console.log('request response', requestResponse)
           return await unwrapResponseBody(requestResponse)
         } else {
           return Promise.reject(normalizeError(refreshData))

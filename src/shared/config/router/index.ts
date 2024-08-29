@@ -1,9 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { LoginPage } from '@/pages/login'
-import { HomePage } from '@/pages/home'
+import { DecksPage } from '@/pages/decks'
 import { useUserStore } from '@/entities/user'
 import { ProfilePage } from '@/pages/profile'
 
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth: boolean
+  }
+}
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -11,8 +16,8 @@ export const router = createRouter({
       path: '/',
       children: [
         {
-          path: '',
-          component: HomePage
+          path: 'decks',
+          component: DecksPage
         },
         {
           path: 'profile',
@@ -20,14 +25,14 @@ export const router = createRouter({
         }
       ],
       meta: {
-        requiredAuth: true
+        requiresAuth: true
       }
     },
     {
       path: '/login',
       component: LoginPage,
       meta: {
-        requiredAuth: false
+        requiresAuth: false
       }
     }
   ]
@@ -36,15 +41,13 @@ export const router = createRouter({
 router.beforeEach(async (to) => {
   const userStore = useUserStore()
 
-  console.log('beforeEach')
+  console.log('beforeEach', userStore.isLoggedIn)
 
-  if (userStore.isLoggedIn && !to.meta.requiredAuth) {
-    return { path: '/', replace: true }
+  if (userStore.isLoggedIn && !to.meta.requiresAuth) {
+    return { path: '/decks', replace: true }
   }
 
-  if (!userStore.isLoggedIn && to.meta.requiredAuth) {
+  if (!userStore.isLoggedIn && to.meta.requiresAuth) {
     return { path: '/login', replace: true }
   }
-
-  return true
 })
