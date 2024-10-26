@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Deck, FindAllDecksOptions, Pagination } from '@/entities/decks/api/decks-api.ts'
+import {
+  type Deck,
+  type FindAllDecksOptions,
+  getMinMaxCardsCount,
+  type Pagination
+} from '@/entities/decks/api/decks-api.ts'
 import { getPaginateDecks } from '@/entities/decks/api/decks-api.ts'
 import type { ResponseFromModel } from '@/shared/lib/notifications.ts'
 import type { AppError } from '@/shared/config/api/api.ts'
@@ -8,6 +13,7 @@ import type { AppError } from '@/shared/config/api/api.ts'
 export const useDecksStore = defineStore('decks', () => {
   const decks = ref<Deck[] | null>(null)
   const decksPagination = ref<Pagination | null>(null)
+  const minMaxCount = ref<number[] | null>(null)
 
   async function fetchDecks(
     params?: FindAllDecksOptions,
@@ -35,5 +41,22 @@ export const useDecksStore = defineStore('decks', () => {
     }
   }
 
-  return { fetchDecks, decks, decksPagination }
+  async function fetchMinMax() {
+    try {
+      const { min, max } = await getMinMaxCardsCount()
+
+      minMaxCount.value = [min, max]
+    } catch (e) {
+      if (import.meta.env.DEV) {
+        console.error(e)
+      }
+      const error = e as AppError
+      return {
+        type: 'error',
+        message: error.message
+      }
+    }
+  }
+
+  return { fetchDecks, decks, decksPagination, fetchMinMax, minMaxCount }
 })

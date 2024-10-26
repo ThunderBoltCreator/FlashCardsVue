@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type AppInputProps, AppTextField } from '@/shared/ui/text-field'
+import { type AppInputProps, TextField } from '@/shared/ui/text-field'
 import IconBase from '@/shared/ui/icon/IconBase.vue'
 import { ref, computed } from 'vue'
 
@@ -15,12 +15,12 @@ const changePasswordVisibility = () => {
 }
 </script>
 <template>
-  <AppTextField class="field" :type="inputType" v-bind="props">
+  <TextField class="field" :type="inputType" v-bind="props">
     <span class="icon" @click="changePasswordVisibility">
       <IconBase v-if="showPassword" name="sprite/eye" />
       <IconBase v-if="!showPassword" name="sprite/close-eye" />
     </span>
-  </AppTextField>
+  </TextField>
 </template>
 <style scoped>
 .icon {

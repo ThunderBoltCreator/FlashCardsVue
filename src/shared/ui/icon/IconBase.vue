@@ -1,7 +1,16 @@
+<script setup lang="ts">
+import { type AnyIconName, getIconMeta } from './getIconMeta'
+
+const props = defineProps<{
+  name: AnyIconName
+}>()
+
+const { axis, filePath, iconName, viewBox } = getIconMeta(props.name)
+</script>
 <template>
   <svg
     :aria-hidden="true"
-    :class="['icon', className]"
+    class="icon"
     :data-axis="axis"
     focusable="false"
     :viewBox="viewBox"
@@ -10,18 +19,6 @@
     <use :href="`/sprites/${filePath}#${iconName}`" />
   </svg>
 </template>
-
-<script setup lang="ts">
-import { type AnyIconName, getIconMeta } from './getIconMeta'
-
-const props = defineProps<{
-  name: AnyIconName
-  className?: string
-}>()
-
-const { axis, filePath, iconName, viewBox } = getIconMeta(props.name)
-</script>
-
 <style scoped>
 .icon {
   user-select: none;
@@ -32,9 +29,8 @@ const { axis, filePath, iconName, viewBox } = getIconMeta(props.name)
   width: 1em;
   height: 1em;
   background-color: transparent;
-
-  use {
-    background-color: transparent;
-  }
+}
+.icon use {
+  background-color: transparent;
 }
 </style>

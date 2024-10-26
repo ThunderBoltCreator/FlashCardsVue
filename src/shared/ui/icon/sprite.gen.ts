@@ -6,9 +6,11 @@ export interface SpritesMap {
     | 'edit'
     | 'eye'
     | 'log-out'
+    | 'loupe'
     | 'paginate-arrow-left'
     | 'paginate-arrow-right'
     | 'profile'
+    | 'trash'
 }
 export const SPRITES_META: {
   [Key in keyof SpritesMap]: {
@@ -24,7 +26,7 @@ export const SPRITES_META: {
   }
 } = {
   sprite: {
-    filePath: 'sprite.e736185c.svg',
+    filePath: 'sprite.7990aa44.svg',
     items: {
       'arrow-back': {
         viewBox: '0 0 24 24',
@@ -56,6 +58,11 @@ export const SPRITES_META: {
         width: 24,
         height: 24
       },
+      loupe: {
+        viewBox: '0 0 24 24',
+        width: 24,
+        height: 24
+      },
       'paginate-arrow-left': {
         viewBox: '0 0 24 24',
         width: 24,
@@ -67,6 +74,11 @@ export const SPRITES_META: {
         height: 24
       },
       profile: {
+        viewBox: '0 0 24 24',
+        width: 24,
+        height: 24
+      },
+      trash: {
         viewBox: '0 0 24 24',
         width: 24,
         height: 24

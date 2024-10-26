@@ -77,3 +77,19 @@ export const getPaginateDecks = (params?: URLSearchParams, options?: RequestInit
     ...options
   })
 }
+
+export interface MinMaxCards {
+  max: number
+  min: number
+}
+
+/**
+ * Retrieve the minimum and maximum amount of cards in a deck.
+ * @summary Minimum and maximum amount of cards in a deck
+ */
+export const getMinMaxCardsCount = () => {
+  return makeAuthorizedRequest<MinMaxCards>({
+    method: 'GET',
+    path: '/v2/decks/min-max-cards'
+  })
+}

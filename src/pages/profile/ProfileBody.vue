@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppButton from '@/shared/ui/button/AppButton.vue'
+import { Button } from '@/shared/ui/button'
 import AppAvatar from '@/shared/ui/avatar/AppAvatar.vue'
 import IconBase from '@/shared/ui/icon/IconBase.vue'
 import AppTypography from '@/shared/ui/typography/AppTypography.vue'
@@ -17,10 +17,10 @@ defineEmits<{
   <AppAvatar size="maxi" :img-src="props.user.avatar" class="avatar" />
   <AppTypography type="h2">{{ props.user.name }}</AppTypography>
   <AppTypography class="email" type="body2">{{ props.user.email }}</AppTypography>
-  <AppButton type="button" variant="secondary" class="logout-button" @click="$emit('logout')">
+  <Button type="button" variant="secondary" class="logout-button" @click="$emit('logout')">
     <IconBase name="sprite/log-out" />
     <AppTypography type="subtitle2">Logout</AppTypography>
-  </AppButton>
+  </Button>
 </template>
 <style scoped>
 .title {

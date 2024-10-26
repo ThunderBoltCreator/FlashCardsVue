@@ -3,7 +3,7 @@ import AppCard from '@/shared/ui/card/AppCard.vue'
 import { useUserStore } from '@/entities/user'
 import { ref } from 'vue'
 import ProfileBody from '@/pages/profile/ProfileBody.vue'
-import AppButton from '@/shared/ui/button/AppButton.vue'
+import { Button } from '@/shared/ui/button'
 import IconBase from '@/shared/ui/icon/IconBase.vue'
 import EditableProfile from '@/pages/profile/EditableProfile.vue'
 import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
@@ -29,7 +29,7 @@ async function handleLogout() {
 <template>
   <AppCard class="profile-root">
     <div class="profile-body-wrapper">
-      <AppButton
+      <Button
         v-if="!editableMod"
         type="button"
         variant="secondary"
@@ -37,7 +37,7 @@ async function handleLogout() {
         @click="changeMod"
       >
         <IconBase name="sprite/edit" />
-      </AppButton>
+      </Button>
       <ProfileBody v-if="!editableMod" :user="userStore.user!" @logout="handleLogout" />
       <EditableProfile v-else @change-mod="changeMod" />
     </div>

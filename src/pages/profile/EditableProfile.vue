@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppTypography from '@/shared/ui/typography/AppTypography.vue'
 import AppAvatar from '@/shared/ui/avatar/AppAvatar.vue'
-import AppButton from '@/shared/ui/button/AppButton.vue'
+import { Button } from '@/shared/ui/button'
 import IconBase from '@/shared/ui/icon/IconBase.vue'
 import { computed, ref } from 'vue'
 import { z, ZodError } from 'zod'
@@ -9,7 +9,7 @@ import { ACCEPTED_IMAGES_FORMATS, IMAGE_MAX_SIZE } from '@/shared/config/const'
 import { notify } from '@/shared/ui/notify/notification.ts'
 import { showToastWithModelResponse } from '@/shared/lib/notifications.ts'
 import { useUserStore } from '@/entities/user'
-import AppTextField from '@/shared/ui/text-field/AppTextField.vue'
+import { TextField } from '@/shared/ui/text-field'
 import { FullPageSpinner } from '@/shared/ui/spinner'
 
 const emit = defineEmits<{
@@ -83,21 +83,21 @@ async function sendChangedProfileData() {
   <div>
     <AppAvatar size="maxi" :img-src="photoPreview" />
     <input ref="input" accept="image/*" type="file" name="" class="input" @change="uploadPhoto" />
-    <AppButton type="button" variant="secondary" class="edit-button" @click="input?.click()">
+    <Button type="button" variant="secondary" class="edit-button" @click="input?.click()">
       <IconBase name="sprite/edit" />
-    </AppButton>
+    </Button>
   </div>
 
   <!--  Смена ника  -->
   <div>
-    <AppTextField v-model="name" :is-form-input="false" name="nickname" label="Name" />
+    <TextField v-model="name" :is-form-input="false" name="nickname" label="Name" />
   </div>
   <!--  Сохранить изменения  -->
   <div class="actions">
-    <AppButton type="button" variant="secondary" class="back-button" @click="$emit('changeMod')"
+    <Button type="button" variant="secondary" class="back-button" @click="$emit('changeMod')"
       ><IconBase name="sprite/arrow-back"
-    /></AppButton>
-    <AppButton type="button" @click="sendChangedProfileData">Save</AppButton>
+    /></Button>
+    <Button type="button" @click="sendChangedProfileData">Save</Button>
   </div>
   <FullPageSpinner v-if="isLoading" />
 </template>

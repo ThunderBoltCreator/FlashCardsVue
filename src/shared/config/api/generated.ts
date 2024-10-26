@@ -186,11 +186,6 @@ export interface CreateDeckRequest {
   name: string
 }
 
-export interface MinMaxCards {
-  max: number
-  min: number
-}
-
 export interface PaginatedCardsWithGrade {
   items: CardWithGrade[]
   pagination: Pagination
@@ -449,16 +444,6 @@ export const decksControllerFindAllV2 = (
   options?: SecondParameter<typeof createInstance>
 ) => {
   return createInstance<PaginatedDecks>({ method: 'GET', params, url: `/v2/decks` }, options)
-}
-
-/**
- * Retrieve the minimum and maximum amount of cards in a deck.
- * @summary Minimum and maximum amount of cards in a deck
- */
-export const decksControllerFindMinMaxCards = (
-  options?: SecondParameter<typeof createInstance>
-) => {
-  return createInstance<MinMaxCards>({ method: 'GET', url: `/v2/decks/min-max-cards` }, options)
 }
 
 /**

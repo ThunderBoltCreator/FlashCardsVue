@@ -20,10 +20,6 @@ export const makeRequest = async <T>(options: ApiOptions): Promise<T> => {
     }
   }
 
-  // if (options.params !== null && !(options.params instanceof URLSearchParams) ) {
-  //
-  // }
-
   if (options.body instanceof FormData) {
     config.headers = undefined
   }

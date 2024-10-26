@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { AppTypography } from '@/shared/ui/typography'
-import { AppButton } from '@/shared/ui/button'
-import { AppTextField } from '@/shared/ui/text-field'
+import { Button } from '@/shared/ui/button'
+import { TextField } from '@/shared/ui/text-field'
 import { AppCheckbox } from '@/shared/ui/checkbox'
 import { useForm } from 'vee-validate'
 import zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import PasswordField from '@/widgets/password-field/PasswordField.vue'
+import { PasswordField } from '@/features/password-field'
 import AppCard from '@/shared/ui/card/AppCard.vue'
 import { useUserStore } from '@/entities/user/model/user-model.ts'
 import FullPageSpinner from '@/shared/ui/spinner/FullPageSpinner.vue'
@@ -45,7 +45,7 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
     <AppTypography class="title" type="h1">Sign In</AppTypography>
 
     <form novalidate class="form" @submit="onSubmit">
-      <AppTextField
+      <TextField
         :is-form-input="true"
         name="email"
         type="email"
@@ -70,7 +70,7 @@ const onSubmit = handleSubmit(async (values: FormFields) => {
       <RouterLink to="/" class="forgot">
         <AppTypography type="body2"> Forgot Password?</AppTypography></RouterLink
       >
-      <AppButton class="btn">Sign In</AppButton>
+      <Button class="btn">Sign In</Button>
     </form>
     <AppTypography class="question" type="body2">Don't have an account?</AppTypography>
     <RouterLink class="link" to="/register">Sign Up</RouterLink>

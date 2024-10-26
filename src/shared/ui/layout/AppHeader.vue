@@ -1,7 +1,7 @@
 <script setup>
 import { MiniProfile } from '@/widgets/mini-profile'
 import { useUserStore } from '@/entities/user'
-import AppButton from '@/shared/ui/button/AppButton.vue'
+import { Button } from '@/shared/ui/button'
 
 const userStore = useUserStore()
 </script>
@@ -10,9 +10,9 @@ const userStore = useUserStore()
     <div class="container header">
       <RouterLink to="/">Logo</RouterLink>
       <MiniProfile v-if="userStore.isLoggedIn" />
-      <AppButton v-else type="button" variant="secondary">
+      <Button v-else type="button" variant="secondary">
         <RouterLink to="/login"> Sign In </RouterLink>
-      </AppButton>
+      </Button>
     </div>
   </header>
 </template>

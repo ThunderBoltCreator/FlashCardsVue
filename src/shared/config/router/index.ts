@@ -41,8 +41,6 @@ export const router = createRouter({
 router.beforeEach(async (to) => {
   const userStore = useUserStore()
 
-  console.log('beforeEach', userStore.isLoggedIn)
-
   if (userStore.isLoggedIn && !to.meta.requiresAuth) {
     return { path: '/decks', replace: true }
   }
