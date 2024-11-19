@@ -1,15 +1,29 @@
+<template>
+  <div class="input-wrapper" :class="$attrs.class">
+    <AppTypography v-if="label" class="label" as="label" :for="name" type="body2">
+      {{ label }}
+    </AppTypography>
+    <div class="icon-wrapper">
+      <input
+        v-bind="inputAttrs"
+        v-model="modelValue"
+        class="text-field-input"
+        @blur="(event: FocusEvent) => $emit('blur', event)"
+        @change="(event: Event) => $emit('change', event)"
+      />
+      <span v-if="$slots.leftIcon" class="text-field-left-icon">
+        <slot name="leftIcon" />
+      </span>
+      <span v-if="$slots.rightIcon" class="text-field-right-icon">
+        <slot name="rightIcon" />
+      </span>
+    </div>
+    <AppTypography v-if="props.errorText" class="error" type="error">{{ errorText }}</AppTypography>
+  </div>
+</template>
 <script setup lang="ts">
 import { AppTypography } from '@/shared/ui/typography'
-import {
-  computed,
-  type InputTypeHTMLAttribute,
-  onMounted,
-  toRaw,
-  toRef,
-  toValue,
-  useAttrs
-} from 'vue'
-import { useField, FieldMeta } from 'vee-validate'
+import { computed, type InputTypeHTMLAttribute, useAttrs } from 'vue'
 
 defineOptions({
   inheritAttrs: false
@@ -19,128 +33,37 @@ export type AppInputProps = {
   label?: string
   errorText?: string
   name: string
-  modelValue?: string
   type?: InputTypeHTMLAttribute
-  isFormInput?: boolean
+  value: string
 }
 
 const props = withDefaults(defineProps<AppInputProps>(), {
   label: '',
   type: 'text',
   errorText: '',
-  modelValue: '',
-  isFormInput: false
+  value: ''
 })
 defineSlots<{
   leftIcon?: (props: {}) => any
   rightIcon?: (props: {}) => any
 }>()
 const emit = defineEmits<{
-  (e: 'change', modelValue: string): void
+  (e: 'blur', event?: FocusEvent): void
+  (e: 'change', event?: any): void
 }>()
 
-const name = toRef(props, 'name')
-const attrs = useAttrs()
+const modelValue = defineModel<string>()
 
-const {
-  value: inputValue,
-  errorMessage,
-  handleChange,
-  handleBlur,
-  meta
-} = useField<string>(name, undefined, {
-  initialValue: props.modelValue
-})
 const inputAttrs = computed(() => {
-  const baseAttrs = {
-    ...Object.fromEntries(Object.entries(attrs).filter((el) => el['key'] !== 'class')),
-    type: props.type
+  const attrs = useAttrs()
+
+  console.log(attrs, 'attrs')
+  return {
+    ...Object.fromEntries(Object.entries(attrs).filter((el) => el[0] !== 'class')),
+    'aria-invalid': !!props.errorText
   }
-  if (props.isFormInput) {
-    return {
-      ...baseAttrs,
-      id: props.name,
-      'aria-invalid': isError,
-      value: toValue(inputValue),
-      class: 'input'
-    }
-  } else {
-    return {
-      ...baseAttrs,
-      value: props.modelValue,
-      type: props.type,
-      class: 'input'
-    }
-  }
-})
-
-const isError = computed(() => {
-  return errorMessage.value ? true : Boolean(props.errorText)
-})
-const error = computed(() => {
-  return errorMessage.value || props.errorText
-})
-
-const fieldEventGetter = (errorMsg: typeof errorMessage, meta: FieldMeta<string>) => {
-  if (errorMsg.value) {
-    return ['input']
-  }
-
-  return []
-}
-const handlers = computed(() => {
-  const on: Record<string, any> = {
-    blur: handleBlur,
-    // input: [(e: unknown) => handleChange(e, false)],
-    input: [
-      (event: Event) => {
-        const target = event.target as HTMLInputElement
-        emit('change', target.value)
-      }
-    ]
-  }
-
-  const triggers = fieldEventGetter(errorMessage, meta) // ['input']
-
-  triggers.forEach((t) => {
-    if (Array.isArray(on[t])) {
-      // t === 'input', on['input'] = fn => else
-      on[t].push(handleChange)
-    } else {
-      on[t] = (e: Event) => handleChange(e, false)
-    }
-  })
-
-  return on
-})
-
-const wrapperClasses = computed(() => {
-  return attrs.class
-})
-
-onMounted(() => {
-  console.log('inputValue', toValue(inputValue))
 })
 </script>
-
-<template>
-  <div class="input-wrapper" :class="wrapperClasses">
-    <AppTypography v-if="label" class="label" as="label" :for="name" type="body2">
-      {{ label }}
-    </AppTypography>
-    <div class="icon-wrapper">
-      <input v-bind="inputAttrs" class="text-field-input" v-on="handlers" />
-      <span v-if="$slots.leftIcon" class="text-field-left-icon">
-        <slot name="leftIcon" />
-      </span>
-      <span v-if="$slots.rightIcon" class="text-field-right-icon">
-        <slot name="rightIcon" />
-      </span>
-    </div>
-    <AppTypography v-if="isError" class="error" type="error">{{ error }}</AppTypography>
-  </div>
-</template>
-
 <style>
 .input-wrapper {
   position: relative;
@@ -193,6 +116,9 @@ onMounted(() => {
 }
 .text-field-input[aria-invalid='true'] {
   border-color: var(--color-danger-500);
+  &::placeholder {
+    color: var(--color-danger-500);
+  }
 }
 .text-field-input[type='search'] {
   padding-left: 41px;

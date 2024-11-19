@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { AppTypography } from '@/shared/ui/typography'
 import {
-  TableRoot,
+  TableBody,
+  TableCell,
   TableHead,
   TableHeaderCell,
-  TableBody,
-  TableRow,
-  TableCell
+  TableRoot,
+  TableRow
 } from '@/shared/ui/table'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useDecksStore } from '@/entities/decks/model/decks-model.ts'
@@ -122,7 +122,7 @@ watch(debouncedSearchName, () => {
   <AppTypography type="h1">Decks list</AppTypography>
   <template v-if="decksStore.minMaxCount">
     <div class="filters">
-      <SearchField model class-name="search" />
+      <SearchField v-model="searchName" class-name="search" />
       <DecksSwitcher />
       <DecksSlider
         :on-change="onSliderChange"
